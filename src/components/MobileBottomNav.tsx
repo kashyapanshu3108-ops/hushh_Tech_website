@@ -181,7 +181,7 @@ const MobileBottomNav: React.FC = () => {
               flex="1"
               h="100%"
               transition="all 0.2s ease"
-              role="link"
+              
               aria-current={active ? 'page' : undefined}
               _active={{ transform: 'scale(0.95)' }}
               _focusVisible={{
