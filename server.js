@@ -43,11 +43,11 @@ app.use((_req, res, next) => {
       "font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com data:",
       "img-src 'self' data: blob: https: http:",
       // Wallet upstream traffic must stay behind same-origin /api proxies to avoid CSP regressions.
-      "connect-src 'self' https://*.plaid.com https://*.supabase.co wss://*.supabase.co https://www.google.com https://www.gstatic.com https://www.google-analytics.com https://www.googletagmanager.com https://api.emailjs.com https://generativelanguage.googleapis.com https://*.googleapis.com https://www.walletlink.org wss://www.walletlink.org wss://mainnet.infura.io wss://*.infura.io https://*.seondnsresolve.com https://www.recaptcha.net https://hushhtech-nda-generation-53407187172.us-central1.run.app",
-      "frame-src 'self' https://cdn.plaid.com https://*.plaid.com https://www.google.com https://www.gstatic.com https://calendly.com https://www.recaptcha.net https://lookerstudio.google.com https://datastudio.google.com",
+      "connect-src 'self' https://*.plaid.com https://*.supabase.co wss://*.supabase.co https://www.google.com https://www.gstatic.com https://www.google-analytics.com https://www.googletagmanager.com https://generativelanguage.googleapis.com https://*.googleapis.com https://www.walletlink.org wss://www.walletlink.org wss://mainnet.infura.io wss://*.infura.io https://*.seondnsresolve.com https://www.recaptcha.net https://hushhtech-nda-generation-53407187172.us-central1.run.app",
+      "frame-src 'self' https://cdn.plaid.com https://*.plaid.com https://www.google.com https://www.gstatic.com https://calendly.com https://www.recaptcha.net https://lookerstudio.google.com https://datastudio.google.com https://gamma.app https://*.gamma.app https://*.gamma.site",
       "media-src 'self' blob: data:",
       "worker-src 'self' blob:",
-      "child-src 'self' blob: https://cdn.plaid.com https://*.plaid.com",
+      "child-src 'self' blob: https://cdn.plaid.com https://*.plaid.com https://gamma.app https://*.gamma.app https://*.gamma.site",
     ].join('; ')
   );
   res.setHeader(
@@ -84,13 +84,18 @@ app.all('/api/enrich-preferences', async (req, res) => wrapHandler(await loadApi
 app.all('/api/gemini-chat', async (req, res) => wrapHandler(await loadApi('gemini-chat'))(req, res));
 app.all('/api/gemini-ephemeral-token', async (req, res) => wrapHandler(await loadApi('gemini-ephemeral-token'))(req, res));
 app.all('/api/generate-investor-profile', async (req, res) => wrapHandler(await loadApi('generate-investor-profile'))(req, res));
+app.all('/api/generate-profile-intelligence', async (req, res) => wrapHandler(await loadApi('generate-profile-intelligence'))(req, res));
 app.all('/api/delete-account', async (req, res) => wrapHandler(await loadApi('delete-account'))(req, res));
 app.all('/api/analytics/collect', async (req, res) => wrapHandler(await loadApi('analytics/collect'))(req, res));
 app.all('/api/analytics/realtime', async (req, res) => wrapHandler(await loadApi('analytics/realtime'))(req, res));
+app.all('/api/community/posts', async (req, res) => wrapHandler(await loadApi('community/posts'))(req, res));
+app.all('/api/community/posts/*', async (req, res) => wrapHandler(await loadApi('community/post-detail'))(req, res));
+app.all('/api/community/assets/*', async (req, res) => wrapHandler(await loadApi('community/asset'))(req, res));
 app.all('/api/metrics/summary', async (req, res) => wrapHandler(await loadApi('metrics/summary'))(req, res));
 app.all('/api/metrics/send-report', async (req, res) => wrapHandler(await loadApi('metrics/send-report'))(req, res));
 app.all('/api/public-investor-profile', async (req, res) => wrapHandler(await loadApi('public-investor-profile'))(req, res));
 app.all('/api/send-email-notification', async (req, res) => wrapHandler(await loadApi('send-email-notification'))(req, res));
+app.all('/api/contact-notification', async (req, res) => wrapHandler(await loadApi('contact-notification'))(req, res));
 app.all('/api/wallet-pass', async (req, res) => wrapHandler(await loadApi('wallet-pass'))(req, res));
 app.all('/api/google-wallet-pass', async (req, res) => wrapHandler(await loadApi('google-wallet-pass'))(req, res));
 

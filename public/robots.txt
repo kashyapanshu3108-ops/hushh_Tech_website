@@ -1,4 +1,4 @@
 
 User-agent: *
 Allow: /
-Sitemap: https://hushhTech.com/sitemap.xml
+Sitemap: https://hushhtech.com/sitemap.xml

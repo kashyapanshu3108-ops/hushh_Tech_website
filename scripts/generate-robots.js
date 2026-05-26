@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const robotsContent = `
 User-agent: *
 Allow: /
-Sitemap: https://hushhTech.com/sitemap.xml
+Sitemap: https://hushhtech.com/sitemap.xml
 `;
 
 fs.writeFileSync(path.join(__dirname, "../public/robots.txt"), robotsContent);

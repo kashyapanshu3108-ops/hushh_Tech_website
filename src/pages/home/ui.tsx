@@ -11,6 +11,11 @@ const playfair = { fontFamily: "'Playfair Display', serif" };
 
 export default function HomePage() {
   const { primaryCTA, onNavigate } = useHomeLogic();
+  const heroPrimaryText = primaryCTA.loading
+    ? primaryCTA.text
+    : primaryCTA.text === "View Your Profile"
+      ? "View Investor Profile"
+      : "Invest With Hushh";
 
   return (
     <div
@@ -21,32 +26,36 @@ export default function HomePage() {
 
       <main
         id="main-content"
-        className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-32 lg:pb-12 pt-4"
+        className="flex-1 w-full max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 pb-32 lg:pb-14 pt-2 sm:pt-4"
       >
-        <div className="flex min-h-[calc(100vh-6rem)] flex-col gap-12 lg:gap-16">
+        <div className="flex flex-col gap-16 lg:min-h-[calc(100vh-6rem)] lg:gap-20">
           <section
-            className="grid grid-cols-1 gap-8 lg:min-h-[70vh] lg:grid-cols-2 lg:items-center lg:gap-12"
+            className="flex flex-col items-center gap-12 pt-8 text-center sm:pt-12 lg:min-h-[78vh] lg:justify-center lg:gap-14"
             aria-labelledby="home-hero-heading"
           >
-            <div className="flex min-w-0 flex-col justify-center py-4 lg:min-h-[58vh]">
+            <div className="flex w-full min-w-0 max-w-3xl flex-col items-center justify-center">
+              <p className="mb-4 text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-gray-400">
+                Hushh Technologies
+              </p>
               <h1
                 id="home-hero-heading"
-                className="text-[2.75rem] leading-[1.1] font-normal text-black tracking-tight font-serif sm:text-[3.25rem] lg:text-[4rem]"
+                className="max-w-[11ch] text-[3.15rem] leading-[1.01] font-normal text-black tracking-tight font-serif sm:text-[4.1rem] lg:text-[5rem]"
                 style={playfair}
               >
                 Investing in <br /> the{" "}
                 <span className="text-gray-400 italic font-light">Future.</span>
               </h1>
-              <p className="text-gray-500 text-sm font-light mt-3 leading-relaxed max-w-sm sm:text-base lg:max-w-md">
+              <p className="mt-6 max-w-[42rem] text-[1.06rem] font-light leading-[1.65] text-gray-500 sm:text-[1.28rem]">
                 The world's first AI-powered Berkshire Hathaway. Merging rigorous
                 data science with human wisdom.
               </p>
-              <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:max-w-md">
+              <div className="mt-10 grid w-full max-w-[29rem] gap-3 sm:grid-cols-2">
                 <HushhTechCta
                   onClick={primaryCTA.action}
                   disabled={primaryCTA.loading}
                   variant={HushhTechCtaVariant.BLACK}
                   aria-busy={primaryCTA.loading}
+                  className="h-[3.15rem] rounded-full text-[0.95rem] shadow-[0_14px_32px_-24px_rgba(0,0,0,0.7)] hover:shadow-[0_18px_38px_-24px_rgba(0,0,0,0.8)]"
                 >
                   {primaryCTA.loading ? (
                     <>
@@ -54,11 +63,11 @@ export default function HomePage() {
                         className="inline-block w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin"
                         aria-hidden="true"
                       />
-                      {primaryCTA.text}
+                      {heroPrimaryText}
                     </>
                   ) : (
                     <>
-                      {primaryCTA.text}
+                      {heroPrimaryText}
                       <span className="material-symbols-outlined thin-icon text-lg" aria-hidden="true">
                         arrow_forward
                       </span>
@@ -69,57 +78,58 @@ export default function HomePage() {
                   onClick={() => onNavigate("/discover-fund-a")}
                   variant={HushhTechCtaVariant.WHITE}
                   aria-label="Discover Fund A — learn about our flagship product"
+                  className="h-[3.15rem] rounded-full border-gray-300 text-[0.95rem]"
                 >
                   Discover Fund A
                 </HushhTechCta>
               </div>
-              <div className="mt-6 border-t border-b border-gray-100 py-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-start sm:gap-8">
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined thin-icon text-lg text-ios-green" aria-hidden="true">
+              <div className="mt-8 flex w-full max-w-[29rem] flex-col items-center gap-3 border-y border-gray-100 py-5 sm:flex-row sm:justify-center sm:gap-8">
+                <div className="flex items-center justify-center gap-2">
+                  <span className="material-symbols-outlined thin-icon text-xl text-ios-green" aria-hidden="true">
                     verified_user
                   </span>
-                  <span className="text-[10px] font-medium tracking-widest uppercase text-gray-400">
+                  <span className="text-[0.7rem] font-medium tracking-[0.22em] uppercase text-gray-400">
                     SEC Registered
                   </span>
                 </div>
                 <div className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full" aria-hidden="true" />
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined thin-icon text-lg text-hushh-blue" aria-hidden="true">
+                <div className="flex items-center justify-center gap-2">
+                  <span className="material-symbols-outlined thin-icon text-xl text-hushh-blue" aria-hidden="true">
                     lock
                   </span>
-                  <span className="text-[10px] font-medium tracking-widest uppercase text-gray-400">
+                  <span className="text-[0.7rem] font-medium tracking-[0.22em] uppercase text-gray-400">
                     Bank Level Security
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="relative mt-2 min-w-0 lg:mt-0">
-              <div className="group bg-ios-dark hover:bg-gray-100 text-white hover:text-gray-900 border border-white/10 hover:border-gray-300 p-8 sm:p-10 lg:p-12 rounded-2xl relative overflow-hidden shadow-2xl w-full lg:max-w-[520px] lg:ml-auto transition-all duration-700 ease-out hover:-rotate-[8deg]">
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-hushh-blue/15 rounded-full blur-3xl" aria-hidden="true" />
-                <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-hushh-blue/5 to-transparent" aria-hidden="true" />
+            <div className="relative w-full min-w-0 max-w-4xl">
+              <div className="group bg-[#202938] text-white border border-white/10 p-7 sm:p-10 lg:p-12 rounded-2xl relative overflow-hidden shadow-[0_28px_90px_-52px_rgba(15,23,42,0.9)] w-full transition-colors duration-300">
+                <div className="absolute inset-x-0 top-0 h-px bg-white/30" aria-hidden="true" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.14),transparent_42%),linear-gradient(180deg,rgba(255,255,255,0.08),transparent_45%)]" aria-hidden="true" />
 
-                <div className="relative z-10 flex flex-col gap-6">
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="relative z-10 flex flex-col gap-8">
+                  <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:justify-between sm:text-left">
                     <div>
-                      <span className="text-[10px] font-medium tracking-widest uppercase text-white/50 group-hover:text-gray-500 mb-1 block transition-colors duration-700">
+                      <span className="text-[10px] font-medium tracking-widest uppercase text-white/62 mb-1 block">
                         Flagship Product
                       </span>
                       <h2
-                        className="text-3xl font-medium font-serif sm:text-4xl transition-colors duration-700"
+                        className="text-3xl font-medium font-serif sm:text-4xl"
                         style={playfair}
                       >
                         Fund A
                       </h2>
                     </div>
-                    <span className="self-start bg-hushh-blue/20 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-medium uppercase tracking-wider border border-hushh-blue/30 text-hushh-blue">
+                    <span className="self-start rounded-full border border-white/12 bg-white/8 px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-white/72">
                       High Growth
                     </span>
                   </div>
 
-                  <div className="space-y-4 my-2 sm:grid sm:grid-cols-2 sm:gap-8 sm:space-y-0">
-                    <div>
-                      <span className="text-xs text-white/50 group-hover:text-gray-500 block mb-1 transition-colors duration-700">
+                  <div className="my-1 grid grid-cols-2 gap-5 border-y border-white/10 py-6 text-left sm:grid-cols-4 sm:gap-8">
+                    <div className="sm:col-span-2">
+                      <span className="text-xs text-white/62 block mb-1">
                         Target Net IRR
                       </span>
                       <span
@@ -129,12 +139,12 @@ export default function HomePage() {
                         18-23%
                       </span>
                     </div>
-                    <div>
-                      <span className="text-xs text-white/50 group-hover:text-gray-500 block mb-1 transition-colors duration-700">
+                    <div className="sm:col-span-2">
+                      <span className="text-xs text-white/62 block mb-1">
                         Inception Year
                       </span>
                       <span
-                        className="font-serif text-[36px] leading-none sm:text-[44px] transition-colors duration-700"
+                        className="font-serif text-[36px] leading-none sm:text-[44px]"
                         style={playfair}
                       >
                         2024
@@ -144,7 +154,7 @@ export default function HomePage() {
 
                   <button
                     type="button"
-                    className="w-full min-h-[44px] pt-4 border-t border-white/10 group-hover:border-gray-300 flex items-center justify-between cursor-pointer bg-transparent text-left transition-colors duration-700 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-hushh-blue focus-visible:ring-offset-2"
+                    className="w-full min-h-[44px] flex items-center justify-between cursor-pointer bg-transparent text-left rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
                     onClick={() => onNavigate("/discover-fund-a")}
                     aria-label="View performance details"
                   >
@@ -160,8 +170,8 @@ export default function HomePage() {
             </div>
           </section>
 
-          <section className="mt-auto space-y-12 lg:space-y-16" aria-labelledby="home-advantage-heading">
-            <div className="inline-block px-3 py-1 border border-hushh-blue/20 rounded-full bg-hushh-blue/5">
+          <section className="mt-auto space-y-10 text-center lg:space-y-14" aria-labelledby="home-advantage-heading">
+            <div className="mx-auto flex w-fit px-3 py-1 border border-hushh-blue/15 rounded-full bg-hushh-blue/5">
               <span className="text-[10px] tracking-widest uppercase font-medium text-hushh-blue flex items-center gap-1">
                 <span
                   className="relative flex items-center justify-center w-1.5 h-1.5"
@@ -174,35 +184,50 @@ export default function HomePage() {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6" role="list">
-              <div className="bg-ios-gray-bg p-5 rounded-2xl border border-gray-200/60 flex flex-col justify-between min-h-[180px] sm:min-h-[220px] hover:border-hushh-blue/30 transition-colors" role="listitem">
-                <span className="material-symbols-outlined thin-icon text-3xl mb-4 text-hushh-blue" aria-hidden="true">
+            <div className="mx-auto max-w-3xl">
+              <p className="text-[10px] uppercase tracking-[0.24em] text-gray-400 mb-3 font-medium">
+                Fund Technology
+              </p>
+              <h2
+                id="home-advantage-heading"
+                className="text-[2.35rem] font-semibold leading-[1.05] tracking-tight text-black sm:text-[3.3rem] lg:text-[4rem]"
+              >
+                Designed like a technology product.
+              </h2>
+              <p className="mx-auto mt-5 max-w-2xl text-[1.02rem] font-light leading-[1.65] text-gray-500 sm:text-[1.18rem]">
+                Institutional analytics, human oversight, and modern fund operations in one investment experience.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4" role="list">
+              <div className="bg-[#f5f5f7] p-6 rounded-2xl border border-gray-200/70 flex flex-col items-start justify-between min-h-[160px] text-left sm:min-h-[190px] sm:p-7 transition-colors" role="listitem">
+                <span className="material-symbols-outlined thin-icon text-3xl mb-5 text-hushh-blue" aria-hidden="true">
                   neurology
                 </span>
                 <div>
                   <h2
-                    className="text-lg font-medium mb-1 font-serif"
+                    className="text-xl font-semibold tracking-tight mb-2"
                     style={playfair}
                   >
                     AI-Powered
                   </h2>
-                  <p className="text-xs text-gray-500 font-light leading-relaxed sm:text-sm">
+                  <p className="text-sm text-gray-500 font-light leading-relaxed sm:text-base">
                     Institutional analytics processing millions of signals.
                   </p>
                 </div>
               </div>
-              <div className="bg-ios-gray-bg p-5 rounded-2xl border border-gray-200/60 flex flex-col justify-between min-h-[180px] sm:min-h-[220px] hover:border-hushh-blue/30 transition-colors" role="listitem">
-                <span className="material-symbols-outlined thin-icon text-3xl mb-4 text-ios-dark" aria-hidden="true">
+              <div className="bg-[#f5f5f7] p-6 rounded-2xl border border-gray-200/70 flex flex-col items-start justify-between min-h-[160px] text-left sm:min-h-[190px] sm:p-7 transition-colors" role="listitem">
+                <span className="material-symbols-outlined thin-icon text-3xl mb-5 text-ios-dark" aria-hidden="true">
                   supervised_user_circle
                 </span>
                 <div>
                   <h2
-                    className="text-lg font-medium mb-1 font-serif"
+                    className="text-xl font-semibold tracking-tight mb-2"
                     style={playfair}
                   >
                     Human-Led
                   </h2>
-                  <p className="text-xs text-gray-500 font-light leading-relaxed sm:text-sm">
+                  <p className="text-sm text-gray-500 font-light leading-relaxed sm:text-base">
                     Seasoned oversight ensuring long-term strategic vision.
                   </p>
                 </div>
@@ -211,17 +236,7 @@ export default function HomePage() {
 
             <div className="space-y-10 lg:space-y-12">
               <div>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2 font-medium">
-                  Why Hushh
-                </p>
-                <h2
-                  id="home-advantage-heading"
-                  className="text-2xl font-medium mb-8 tracking-tight font-serif sm:text-3xl"
-                  style={playfair}
-                >
-                  The Hushh Advantage
-                </h2>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-4" role="list">
+                <div className="grid grid-cols-2 gap-x-5 gap-y-9 sm:grid-cols-4" role="list">
                   {[
                     {
                       icon: "analytics",
@@ -258,7 +273,7 @@ export default function HomePage() {
                       role="listitem"
                     >
                       <div
-                        className={`w-12 h-12 rounded-full border border-gray-200/60 flex items-center justify-center ${item.bg}`}
+                        className={`w-11 h-11 rounded-full border border-gray-200/70 flex items-center justify-center ${item.bg}`}
                       >
                         <span
                           className={`material-symbols-outlined thin-icon ${item.color}`}
@@ -268,10 +283,10 @@ export default function HomePage() {
                         </span>
                       </div>
                       <div>
-                        <h3 className="font-medium text-sm mb-1">
+                        <h3 className="font-medium text-[0.9rem] mb-1">
                           {item.title}
                         </h3>
-                        <p className="text-[11px] text-gray-500 font-light max-w-[180px] mx-auto">
+                        <p className="text-[11px] leading-relaxed text-gray-500 font-light max-w-[160px] mx-auto">
                           {item.desc}
                         </p>
                       </div>
@@ -280,7 +295,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4" role="list">
+              <div className="grid grid-cols-2 gap-3 text-left sm:grid-cols-4" role="list">
                 {[
                   {
                     icon: "rocket_launch",
@@ -309,7 +324,7 @@ export default function HomePage() {
                 ].map((item) => (
                   <div
                     key={item.icon}
-                    className="bg-ios-gray-bg border border-gray-200/60 p-4 rounded-2xl hover:border-hushh-blue/30 transition-colors"
+                    className="bg-[#f5f5f7] border border-gray-200/70 p-4 rounded-xl transition-colors sm:p-5"
                     role="listitem"
                   >
                     <span
@@ -318,8 +333,8 @@ export default function HomePage() {
                     >
                       {item.icon}
                     </span>
-                    <h3 className="font-medium text-sm">{item.title}</h3>
-                    <p className="text-[10px] text-gray-500 font-light">
+                    <h3 className="font-medium text-sm leading-tight">{item.title}</h3>
+                    <p className="mt-1 text-[10px] leading-relaxed text-gray-500 font-light">
                       {item.desc}
                     </p>
                   </div>
@@ -330,6 +345,7 @@ export default function HomePage() {
                 <HushhTechCta
                   onClick={() => onNavigate("/discover-fund-a")}
                   variant={HushhTechCtaVariant.BLACK}
+                  className="h-[3.2rem] rounded-full shadow-[0_14px_32px_-24px_rgba(0,0,0,0.7)]"
                 >
                   Explore Our Approach
                   <span className="material-symbols-outlined thin-icon text-lg" aria-hidden="true">
@@ -339,6 +355,7 @@ export default function HomePage() {
                 <HushhTechCta
                   onClick={() => onNavigate("/community")}
                   variant={HushhTechCtaVariant.WHITE}
+                  className="h-[3.2rem] rounded-full border-gray-300"
                 >
                   Learn More
                 </HushhTechCta>

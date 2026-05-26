@@ -264,11 +264,11 @@ const FundA = () => {
 
           {/* ── Target IRR (premium black card) ── */}
           <div className="mt-8 lg:mt-0">
-            <div className="group bg-ios-dark rounded-2xl p-6 text-center relative overflow-hidden transition-all duration-700 hover:-rotate-[5deg]">
+            <div className="group bg-gradient-to-br from-[#293241] via-[#232b38] to-[#182233] rounded-2xl p-6 text-center relative overflow-hidden border border-white/20 shadow-[0_24px_70px_-36px_rgba(15,23,42,0.7)] transition-all duration-700 hover:-rotate-[5deg]">
               <div className="absolute inset-0 bg-ios-gray-bg/90 opacity-0 transition-opacity duration-700 ease-out group-hover:opacity-100" />
-              <div className="absolute -top-8 -right-8 w-32 h-32 bg-hushh-blue/15 rounded-full blur-2xl" />
+              <div className="absolute -top-8 -right-8 w-32 h-32 bg-hushh-blue/20 rounded-full blur-2xl" />
               <div className="relative z-10">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500 group-hover:text-gray-600 mb-3 font-medium transition-colors duration-700">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-300 group-hover:text-gray-700 mb-3 font-medium transition-colors duration-700">
                   {targetIRRLabel}
                 </p>
                 <p
@@ -277,10 +277,10 @@ const FundA = () => {
                 >
                   {targetIRRValue}
                 </p>
-                <p className="text-[13px] text-gray-400 group-hover:text-gray-600 mb-4 transition-colors duration-700">
+                <p className="text-[13px] text-gray-300 group-hover:text-gray-700 mb-4 transition-colors duration-700">
                   {targetIRRPeriod}
                 </p>
-                <p className="text-[9px] text-gray-600 italic max-w-[220px] mx-auto leading-relaxed">
+                <p className="text-[9px] text-gray-400 group-hover:text-gray-700 italic max-w-[220px] mx-auto leading-relaxed transition-colors duration-700">
                   {targetIRRDisclaimer}
                 </p>
               </div>

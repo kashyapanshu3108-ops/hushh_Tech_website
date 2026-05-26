@@ -29,6 +29,14 @@
     "APPLE_CLIENT_ID",
     "APPLE_KEY_ID",
     "APPLE_KEY_FILE_PATH",
+    "GEMINI_API_KEY",
+    "GEMINI_INVESTOR_PROFILE_MODEL",
+    "GEMINI_INVESTOR_PROFILE_PROVIDER",
+    "PROFILE_INTELLIGENCE_API_BASE_URL",
+    "PROFILE_INTELLIGENCE_TIMEOUT_MS",
+    "GOOGLE_CLOUD_PROJECT",
+    "GOOGLE_CLOUD_LOCATION",
+    "GCP_PROJECT_ID",
     "OPENAI_API_KEY",
     "PLAID_CLIENT_ID",
     "PLAID_SECRET",
@@ -42,6 +50,10 @@
     "GOOGLE_WALLET_CLASS_SUFFIX",
     "GOOGLE_WALLET_ALLOWED_ORIGINS",
     "LOOKER_STUDIO_EMBED_URL",
+    "COMMUNITY_CONTENT_BACKEND",
+    "COMMUNITY_CONTENT_COLLECTION",
+    "COMMUNITY_CONTENT_BUCKET",
+    "COMMUNITY_CONTENT_CACHE_SECONDS",
     "GA4_PROPERTY_ID",
     "GA4_ALLOWED_HOSTNAMES",
     "ANALYTICS_HASH_SALT",
@@ -75,6 +87,17 @@
     ".github/workflows/deploy-prod.yml"
   ],
   "deployRuntimeRequired": [
+    "COMMUNITY_CONTENT_BACKEND",
+    "COMMUNITY_CONTENT_COLLECTION",
+    "COMMUNITY_CONTENT_BUCKET",
+    "COMMUNITY_CONTENT_CACHE_SECONDS",
+    "GEMINI_INVESTOR_PROFILE_MODEL",
+    "GEMINI_INVESTOR_PROFILE_PROVIDER",
+    "GOOGLE_CLOUD_PROJECT",
+    "GOOGLE_CLOUD_LOCATION",
+    "GEMINI_API_KEY",
+    "PROFILE_INTELLIGENCE_API_BASE_URL",
+    "PROFILE_INTELLIGENCE_TIMEOUT_MS",
     "SUPABASE_URL",
     "SUPABASE_SERVICE_ROLE_KEY"
   ],
@@ -90,6 +113,8 @@
   },
   "criticalServerRouteVars": {
     "SUPABASE_URL": [
+      "api/generate-investor-profile.js",
+      "api/generate-profile-intelligence.js",
       "api/public-investor-profile.js",
       "api/delete-account-service.js",
       "api/send-email-notification.js",
@@ -97,6 +122,8 @@
       "api/analytics/collect.js"
     ],
     "SUPABASE_SERVICE_ROLE_KEY": [
+      "api/generate-investor-profile.js",
+      "api/generate-profile-intelligence.js",
       "api/public-investor-profile.js",
       "api/delete-account-service.js",
       "api/send-email-notification.js",
@@ -109,16 +136,42 @@
     "SEARCH_CONSOLE_SITE_URL": [
       "api/metrics/service.js"
     ],
-    "OPENAI_API_KEY": [
+    "GEMINI_API_KEY": [
       "api/generate-investor-profile.js",
+      "api/gemini-ephemeral-token.js"
+    ],
+    "GEMINI_INVESTOR_PROFILE_MODEL": [
+      "api/generate-investor-profile.js"
+    ],
+    "GEMINI_INVESTOR_PROFILE_PROVIDER": [
+      "api/generate-investor-profile.js"
+    ],
+    "GOOGLE_CLOUD_PROJECT": [
+      "api/generate-investor-profile.js"
+    ],
+    "GOOGLE_CLOUD_LOCATION": [
+      "api/generate-investor-profile.js"
+    ],
+    "GCP_PROJECT_ID": [
+      "api/generate-investor-profile.js"
+    ],
+    "PROFILE_INTELLIGENCE_API_BASE_URL": [
+      "api/generate-profile-intelligence.js"
+    ],
+    "PROFILE_INTELLIGENCE_TIMEOUT_MS": [
+      "api/generate-profile-intelligence.js"
+    ],
+    "OPENAI_API_KEY": [
       "api/enrich-preferences.js"
     ],
     "GMAIL_USER": [
       "api/send-email-notification.js",
+      "api/contact-notification.js",
       "api/metrics/send-report.js"
     ],
     "GMAIL_APP_PASSWORD": [
       "api/send-email-notification.js",
+      "api/contact-notification.js",
       "api/metrics/send-report.js"
     ],
     "GOOGLE_WALLET_ISSUER_ID": [

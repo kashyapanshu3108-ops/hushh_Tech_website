@@ -104,6 +104,7 @@ jobs:
           runtime_secret_names=(
             hushh-tech-supabase-url
             hushh-tech-supabase-service-role-key
+            hushh-tech-gemini-api-key
             hushh-tech-analytics-hash-salt
             hushh-tech-metrics-ga4-property-id
             hushh-tech-metrics-ga4-allowed-hostnames
@@ -123,6 +124,27 @@ jobs:
               exit 1
             fi
           done
+
+          gmail_user_secret_present=0
+          gmail_password_secret_present=0
+          if gcloud secrets describe hushh-tech-gmail-user --project=hushh-tech-prod >/dev/null 2>&1; then
+            gmail_user_secret_present=1
+          fi
+          if gcloud secrets describe hushh-tech-gmail-app-password --project=hushh-tech-prod >/dev/null 2>&1; then
+            gmail_password_secret_present=1
+          fi
+
+          if [ "$gmail_user_secret_present" -ne "$gmail_password_secret_present" ]; then
+            echo "::error::Production Gmail runtime secrets must be configured as a pair."
+            exit 1
+          fi
+
+          if [ "$gmail_user_secret_present" -eq 1 ]; then
+            printf 'GMAIL_RUNTIME_SECRETS_AVAILABLE=1\n' >> "$GITHUB_ENV"
+          else
+            printf 'GMAIL_RUNTIME_SECRETS_AVAILABLE=0\n' >> "$GITHUB_ENV"
+            echo "Optional production Gmail runtime secrets are not configured; preserving current Cloud Run behavior without Gmail env bindings."
+          fi
 
           echo "::add-mask::$supabase_url"
           echo "::add-mask::$supabase_anon_key"
@@ -154,9 +176,14 @@ jobs:
       - name: Deploy to Cloud Run
         shell: bash
         run: |
-          runtime_env="NODE_ENV=production"
+          runtime_env="NODE_ENV=production,COMMUNITY_CONTENT_BACKEND=gcp,COMMUNITY_CONTENT_COLLECTION=community_posts,COMMUNITY_CONTENT_BUCKET=hushh-tech-community-content-prod,COMMUNITY_CONTENT_CACHE_SECONDS=300,GEMINI_INVESTOR_PROFILE_PROVIDER=vertex,GEMINI_INVESTOR_PROFILE_MODEL=gemini-2.5-flash,GOOGLE_CLOUD_PROJECT=hushh-tech-prod,GOOGLE_CLOUD_LOCATION=us-central1,PROFILE_INTELLIGENCE_API_BASE_URL=https://hushh-ria-intelligence-api-53407187172.us-central1.run.app,PROFILE_INTELLIGENCE_TIMEOUT_MS=180000"
           runtime_secrets="SUPABASE_URL=hushh-tech-supabase-url:latest"
           runtime_secrets+=",SUPABASE_SERVICE_ROLE_KEY=hushh-tech-supabase-service-role-key:latest"
+          runtime_secrets+=",GEMINI_API_KEY=hushh-tech-gemini-api-key:latest"
+          if [ "${GMAIL_RUNTIME_SECRETS_AVAILABLE:-0}" = "1" ]; then
+            runtime_secrets+=",GMAIL_USER=hushh-tech-gmail-user:latest"
+            runtime_secrets+=",GMAIL_APP_PASSWORD=hushh-tech-gmail-app-password:latest"
+          fi
           runtime_secrets+=",ANALYTICS_HASH_SALT=hushh-tech-analytics-hash-salt:latest"
           runtime_secrets+=",GA4_PROPERTY_ID=hushh-tech-metrics-ga4-property-id:latest"
           runtime_secrets+=",GA4_ALLOWED_HOSTNAMES=hushh-tech-metrics-ga4-allowed-hostnames:latest"

@@ -165,11 +165,17 @@ export interface PostData {
   count: number;
   description: string;
   category: string;
-  Component: React.ComponentType;
+  Component: React.ComponentType | string;
   image: string;
   accessLevel: string;
   pdfUrl?: string; // Optional PDF URL
+  mediaItems?: Array<string | { object?: string; assetObject?: string; url?: string; type?: "image" | "video"; alt?: string; name?: string }>;
 }
+
+const getPostComponentName = (post: PostData): string =>
+  typeof post.Component === 'string'
+    ? post.Component
+    : (post.Component as React.ComponentType & { name?: string }).name || '';
 
 export const posts: PostData[] = [
   // Featured Post - Sell the Wall (Nov 30, 2025)
@@ -317,6 +323,16 @@ export const posts: PostData[] = [
     Component: Dmu17apr,
     image: DailyMarketUpdateImg1,
     accessLevel: 'Public',
+    mediaItems: [
+      'market-updates/dmu17apr/1.jpg',
+      'market-updates/dmu17apr/2.jpg',
+      'market-updates/dmu17apr/3.jpg',
+      'market-updates/dmu17apr/4.jpg',
+      'market-updates/dmu17apr/5.jpg',
+      'market-updates/dmu17apr/6.jpg',
+      'market-updates/dmu17apr/1.mp4',
+      'market-updates/dmu17apr/2.mp4',
+    ],
   },
   {
     count: 141,
@@ -328,6 +344,25 @@ export const posts: PostData[] = [
     Component: Dmu16apr,
     image: DailyMarketUpdateImg3,
     accessLevel: 'Public',
+    mediaItems: [
+      'market-updates/dmu16apr/1.jpg',
+      'market-updates/dmu16apr/2.jpg',
+      'market-updates/dmu16apr/3.jpg',
+      'market-updates/dmu16apr/4.jpg',
+      'market-updates/dmu16apr/5.jpg',
+      'market-updates/dmu16apr/6.jpg',
+      'market-updates/dmu16apr/7.jpg',
+      'market-updates/dmu16apr/8.jpg',
+      'market-updates/dmu16apr/9.jpg',
+      'market-updates/dmu16apr/10.jpg',
+      'market-updates/dmu16apr/11.jpg',
+      'market-updates/dmu16apr/12.jpg',
+      'market-updates/dmu16apr/13.jpg',
+      'market-updates/dmu16apr/14.mp4',
+      'market-updates/dmu16apr/15.jpg',
+      'market-updates/dmu16apr/16.jpg',
+      'market-updates/dmu16apr/17.jpg',
+    ],
   },
   {
     count: 140,
@@ -339,6 +374,13 @@ export const posts: PostData[] = [
     Component: Dmu15apr,
     image: DailyMarketUpdateImg2,
     accessLevel: 'Public',
+    mediaItems: [
+      'market-updates/dmu15apr/1.jpg',
+      'market-updates/dmu15apr/2.jpg',
+      'market-updates/dmu15apr/3.jpg',
+      'market-updates/dmu15apr/4.jpg',
+      'market-updates/dmu15apr/5.jpg',
+    ],
   },
   {
     count: 139,
@@ -350,6 +392,16 @@ export const posts: PostData[] = [
     Component: Dmu11apr,
     image: DailyMarketUpdateImg1,
     accessLevel: 'Public',
+    mediaItems: [
+      'market-updates/dmu11apr/1.jpg',
+      'market-updates/dmu11apr/2.jpg',
+      'market-updates/dmu11apr/3.jpg',
+      'market-updates/dmu11apr/4.jpg',
+      'market-updates/dmu11apr/5.jpg',
+      'market-updates/dmu11apr/6.jpg',
+      'market-updates/dmu11apr/7.jpg',
+      'market-updates/dmu11apr/8.jpg',
+    ],
   },
   {
     count: 138,
@@ -361,6 +413,14 @@ export const posts: PostData[] = [
     Component: Dmu10apr,
     image: DailyMarketUpdateImg2,
     accessLevel: 'Public',
+    mediaItems: [
+      'market-updates/dmu10apr/1.jpg',
+      'market-updates/dmu10apr/2.jpg',
+      'market-updates/dmu10apr/3.jpg',
+      'market-updates/dmu10apr/4.jpg',
+      'market-updates/dmu10apr/5.jpg',
+      'market-updates/dmu10apr/6.jpg',
+    ],
   },
   {
     count:1,
@@ -1508,6 +1568,17 @@ export const posts: PostData[] = [
   Component: dmu4apr,
   image: DailyMarketUpdateImg2,
   accessLevel: 'Public',
+  mediaItems: [
+    'market-updates/dmu4apr/1.jpg',
+    'market-updates/dmu4apr/2.jpg',
+    'market-updates/dmu4apr/3.jpg',
+    'market-updates/dmu4apr/4.jpg',
+    'market-updates/dmu4apr/5.jpg',
+    'market-updates/dmu4apr/6.jpg',
+    'market-updates/dmu4apr/7.jpg',
+    'market-updates/dmu4apr/8.jpg',
+    'market-updates/dmu4apr/9.jpg',
+  ],
 },
 {
   count: 102,
@@ -1519,6 +1590,22 @@ export const posts: PostData[] = [
   Component: Dmu3apr,
   image: DailyMarketUpdateImg1,
   accessLevel: 'Public',
+  mediaItems: [
+    'market-updates/dmu3apr/1.jpg',
+    'market-updates/dmu3apr/2.jpg',
+    'market-updates/dmu3apr/3.jpg',
+    'market-updates/dmu3apr/4.jpg',
+    'market-updates/dmu3apr/5.jpg',
+    'market-updates/dmu3apr/6.jpg',
+    'market-updates/dmu3apr/7.jpg',
+    'market-updates/dmu3apr/8.jpg',
+    'market-updates/dmu3apr/9.jpg',
+    'market-updates/dmu3apr/10.jpg',
+    'market-updates/dmu3apr/11.jpg',
+    'market-updates/dmu3apr/12.jpg',
+    'market-updates/dmu3apr/13.jpg',
+    'market-updates/dmu3apr/1.mp4',
+  ],
 },
 {
   count: 103, // Make sure this is incremented from the last count
@@ -1530,6 +1617,18 @@ export const posts: PostData[] = [
   Component: Dmu2apr,
   image: DailyMarketUpdateImg1,
   accessLevel: 'Public',
+  mediaItems: [
+    'market-updates/dmu2apr/1.jpg',
+    'market-updates/dmu2apr/2.jpg',
+    'market-updates/dmu2apr/3.jpg',
+    'market-updates/dmu2apr/4.jpg',
+    'market-updates/dmu2apr/5.jpg',
+    'market-updates/dmu2apr/6.jpg',
+    'market-updates/dmu2apr/7.jpg',
+    'market-updates/dmu2apr/8.jpg',
+    'market-updates/dmu2apr/9.jpg',
+    'market-updates/dmu2apr/1.mp4',
+  ],
 },
 {
   count: 104, // Make sure this is incremented from the last count
@@ -1563,6 +1662,28 @@ export const posts: PostData[] = [
   Component: Dmu8apr,
   image: DailyMarketUpdateImg1,
   accessLevel: 'Public',
+  mediaItems: [
+    'market-updates/dmu8apr/1.jpg',
+    'market-updates/dmu8apr/2.jpg',
+    'market-updates/dmu8apr/3.jpg',
+    'market-updates/dmu8apr/4.jpg',
+    'market-updates/dmu8apr/5.jpg',
+    'market-updates/dmu8apr/6.jpg',
+    'market-updates/dmu8apr/7.jpg',
+    'market-updates/dmu8apr/8.jpg',
+    'market-updates/dmu8apr/9.jpg',
+    'market-updates/dmu8apr/10.jpg',
+    'market-updates/dmu8apr/11.jpg',
+    'market-updates/dmu8apr/12.jpg',
+    'market-updates/dmu8apr/13.jpg',
+    'market-updates/dmu8apr/14.jpg',
+    'market-updates/dmu8apr/15.jpg',
+    'market-updates/dmu8apr/16.jpg',
+    'market-updates/dmu8apr/17.jpg',
+    'market-updates/dmu8apr/18.jpg',
+    'market-updates/dmu8apr/19.jpg',
+    'market-updates/dmu8apr/20.jpg',
+  ],
 },
 {
   count: 107, // Make sure this is incremented from the last count
@@ -1574,6 +1695,19 @@ export const posts: PostData[] = [
   Component: Dmu7apr,
   image: DailyMarketUpdateImg1,
   accessLevel: 'Public',
+  mediaItems: [
+    'market-updates/dmu7apr/1.jpeg',
+    'market-updates/dmu7apr/2.jpeg',
+    'market-updates/dmu7apr/3.jpeg',
+    'market-updates/dmu7apr/4.jpeg',
+    'market-updates/dmu7apr/5.jpeg',
+    'market-updates/dmu7apr/6.jpeg',
+    'market-updates/dmu7apr/7.jpeg',
+    'market-updates/dmu7apr/8.jpeg',
+    'market-updates/dmu7apr/9.jpeg',
+    'market-updates/dmu7apr/10.jpeg',
+    'market-updates/dmu7apr/11.jpeg',
+  ],
 },
 {
   count: 108, // Make sure this is incremented from the last count
@@ -1585,6 +1719,15 @@ export const posts: PostData[] = [
   Component: Dmu9apr,
   image: DailyMarketUpdateImg1,
   accessLevel: 'Public',
+  mediaItems: [
+    'market-updates/dmu9apr/1.jpg',
+    'market-updates/dmu9apr/2.jpg',
+    'market-updates/dmu9apr/3.jpg',
+    'market-updates/dmu9apr/4.jpg',
+    'market-updates/dmu9apr/5.jpg',
+    'market-updates/dmu9apr/6.jpg',
+    'market-updates/dmu9apr/7.jpg',
+  ],
 },
 // {
 //   count: 109, // Incremented from the last count
@@ -1741,4 +1884,13 @@ export function getPosts(): PostData[] {
 
 export function getPostBySlug(slug: string): PostData | undefined {
   return posts.find((post) => post.slug === slug);
+}
+
+export function getPostByComponentName(componentName?: string): PostData | undefined {
+  if (!componentName) return undefined;
+  return posts.find((post) => getPostComponentName(post) === componentName);
+}
+
+export function getPostBySlugOrComponentName(slug: string, componentName?: string): PostData | undefined {
+  return getPostBySlug(slug) || getPostByComponentName(componentName);
 }

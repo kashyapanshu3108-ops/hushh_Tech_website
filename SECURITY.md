@@ -23,7 +23,8 @@ Include:
 ## Contribution safety
 
 - Fork and first-time contributor pull requests may require maintainer approval before code-executing workflows can run.
-- CODEOWNERS review and maintainer approval are required for protected branches.
+- CODEOWNERS review and maintainer approval are required for protected branches unless `@ankitkumarsingh1702` uses the Ankit-only ruleset bypass.
+- Only `@ankitkumarsingh1702` may bypass reviewer requirements or merge protected-branch PRs.
 - Automated AI review and CI findings are advisory inputs to maintainers, not a substitute for human approval.
 - Production deploys are promoted from approved, smoke-green `main` SHAs only.
 

@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createSupabaseServerClient } from "./shared/supabaseServerClient.js";
 
 const getServiceClient = () => {
   const supabaseUrl = process.env.SUPABASE_URL?.trim();
@@ -8,12 +8,7 @@ const getServiceClient = () => {
     throw new Error("Supabase server environment variables are missing");
   }
 
-  return createClient(supabaseUrl, serviceRoleKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
+  return createSupabaseServerClient(supabaseUrl, serviceRoleKey);
 };
 
 export const isPublicProfileFieldVisible = (

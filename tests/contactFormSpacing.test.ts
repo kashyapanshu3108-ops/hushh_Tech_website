@@ -8,11 +8,8 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { MemoryRouter } from "react-router-dom";
 import Contact from "../src/pages/Contact";
 
-vi.mock("@emailjs/browser", () => ({
-  default: {
-    init: vi.fn(),
-    send: vi.fn(),
-  },
+vi.mock("../src/components/hushh-tech-header/HushhTechHeader", () => ({
+  default: () => React.createElement("header", null, "HushhTechHeader"),
 }));
 
 describe("Contact form spacing", () => {

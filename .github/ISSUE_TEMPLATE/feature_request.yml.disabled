@@ -1,5 +1,5 @@
 name: Feature request
-description: Propose a product or developer-experience improvement.
+description: Disabled during Rustic Phase 2. Feature requests are paused while the repo focuses on bug reporting.
 title: "[feature] "
 labels:
   - enhancement

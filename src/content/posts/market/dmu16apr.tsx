@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text, Heading, VStack, Divider, List, ListItem } from '@chakra-ui/react';
+import { Box, Text, Heading, VStack, Divider } from '@chakra-ui/react';
 import MarketUpdateGallery from '../../../components/MarketUpdateGallery';
 
 const Dmu16apr = () => {
@@ -15,6 +15,11 @@ const Dmu16apr = () => {
       <Heading as="h3" fontSize="lg" color="black" mb={4}>
         Market Overview:
       </Heading>
+      <VStack align="start" spacing={2}>
+        <Text>
+          Internal review and investor communication for the Aloha Alpha Fund, highlighting performance and strategy updates.
+        </Text>
+      </VStack>
 
       <Divider my={4} borderColor="black" />
 
@@ -29,4 +34,4 @@ const Dmu16apr = () => {
   );
 };
 
-export default Dmu16apr; 
+export default Dmu16apr;

@@ -6,9 +6,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
-import { getPostBySlug, PostData } from "../../data/posts";
+import { getPostBySlug, getPostBySlugOrComponentName, PostData } from "../../data/posts";
 import { useAuthSession } from "../../auth/AuthSessionProvider";
 import { checkAccessStatus } from "../../services/access/accessControlApi";
+import {
+  fetchCommunityPost,
+  type CommunityPostDetail,
+} from "../../services/communityContent";
 
 export const useCommunityPostLogic = () => {
   const { "*": slug } = useParams();
@@ -17,7 +21,8 @@ export const useCommunityPostLogic = () => {
   const { session, status } = useAuthSession();
   const toastShownRef = useRef<Record<string, boolean>>({});
 
-  const [post, setPost] = useState<PostData | null>(null);
+  const [post, setPost] = useState<CommunityPostDetail | null>(null);
+  const [legacyPost, setLegacyPost] = useState<PostData | null>(null);
   const [loading, setLoading] = useState(true);
 
   /** Show a toast only once per key to avoid duplicates */
@@ -30,13 +35,29 @@ export const useCommunityPostLogic = () => {
 
   useEffect(() => {
     const loadPost = async () => {
-      const foundPost = getPostBySlug(slug || "");
+      setLoading(true);
+      setLegacyPost(null);
+      const activeSlug = slug || "";
+      let gcpPost: CommunityPostDetail | null = null;
+      const foundPost = getPostBySlug(activeSlug);
+      try {
+        gcpPost = await fetchCommunityPost(activeSlug);
+      } catch (error) {
+        console.error("Error loading community post:", error);
+      }
+
+      if (gcpPost) {
+        setPost(gcpPost);
+        setLegacyPost(getPostBySlugOrComponentName(activeSlug, gcpPost.componentName) || null);
+        setLoading(false);
+        return;
+      }
 
       /* post not found */
       if (!foundPost) {
-        showToastOnce(`post-not-found-${slug}`, {
+        showToastOnce(`post-not-found-${activeSlug}`, {
           title: "Post Not Found",
-          description: `The post with slug "${slug}" was not found.`,
+          description: `The post with slug "${activeSlug}" was not found.`,
           status: "error",
           duration: 4000,
           isClosable: true,
@@ -95,7 +116,46 @@ export const useCommunityPostLogic = () => {
       }
 
       /* all checks passed */
-      setPost(foundPost);
+      setPost({
+        id: foundPost.slug,
+        slug: foundPost.slug,
+        title: foundPost.title,
+        date: foundPost.publishedAt,
+        publishedAt: foundPost.publishedAt,
+        description: foundPost.description,
+        category: foundPost.category,
+        accessLevel: foundPost.accessLevel,
+        status: "published",
+        sourceKind: foundPost.pdfUrl ? "document" : "legacy",
+        assetUrl: foundPost.pdfUrl
+          ? `/api/community/assets/public/${encodeURIComponent(foundPost.pdfUrl.replace(/^\/+/, ""))}`
+          : undefined,
+        mediaItems: foundPost.mediaItems?.map((item, index) => {
+          if (typeof item === "string") {
+            return {
+              name: item.split("/").pop() || `media-${index + 1}`,
+              url: `/api/community/assets/${encodeURIComponent(item).replace(/%2F/g, "/")}`,
+              type: /\.(mp4|mov|webm)$/i.test(item) ? "video" : "image",
+            };
+          }
+
+          const objectName = item.object || item.assetObject;
+          const sameOriginAssetUrl = item.url?.startsWith("/api/community/assets/")
+            ? item.url
+            : "";
+          return {
+            name: item.name || objectName?.split("/").pop() || `media-${index + 1}`,
+            url:
+              sameOriginAssetUrl ||
+              (objectName
+                ? `/api/community/assets/${encodeURIComponent(objectName).replace(/%2F/g, "/")}`
+                : ""),
+            type: item.type || (/\.(mp4|mov|webm)$/i.test(objectName || item.url || "") ? "video" : "image"),
+            alt: item.alt,
+          };
+        }).filter((item) => item.url),
+      });
+      setLegacyPost(foundPost);
       setLoading(false);
     };
 
@@ -106,6 +166,7 @@ export const useCommunityPostLogic = () => {
 
   return {
     post,
+    legacyPost,
     loading,
     handleBack,
   };

@@ -9,6 +9,7 @@ import hushhLogo from "../images/Hushhogo.png";
 import { useAuthSession } from "../../auth/AuthSessionProvider";
 import { useModalKeyboardNavigation } from "../../hooks/useModalKeyboardNavigation";
 import { moveFocusWithin } from "../../utils/keyboardNavigation";
+import { useHushhProfileCta } from "../../hooks/useHushhProfileCta";
 
 interface NavItem {
   icon: string;
@@ -20,17 +21,15 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { icon: "home", label: "Home", path: "/" },
-  { icon: "menu_book", label: "Our Philosophy", path: "/philosophy" },
   { icon: "pie_chart", label: "Fund A", path: "/discover-fund-a" },
   { icon: "groups", label: "Community", path: "/community" },
-  { icon: "verified_user", label: "KYC Studio Alpha", path: "/kyc" },
 ];
 
 const HIGHLIGHT_ITEM: NavItem = {
   icon: "lock",
   label: "Unlock 300K Coins",
   subtitle: "$1 or use coupon code",
-  path: "/unlock-coins",
+  path: "",
   highlight: true,
 };
 
@@ -52,6 +51,7 @@ const HushhTechNavDrawer: React.FC<HushhTechNavDrawerProps> = ({
   const location = useLocation();
   const { status, signOut } = useAuthSession();
   const isAuthenticated = status === "authenticated";
+  const { primaryCTA } = useHushhProfileCta({ enabled: isOpen });
   const drawerRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -83,6 +83,11 @@ const HushhTechNavDrawer: React.FC<HushhTechNavDrawerProps> = ({
     onClose();
     await signOut();
     navigate("/login");
+  };
+
+  const handleUnlockCoins = () => {
+    onClose();
+    primaryCTA.action();
   };
 
   const handleDrawerKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -159,7 +164,8 @@ const HushhTechNavDrawer: React.FC<HushhTechNavDrawerProps> = ({
 
           {/* Highlight card — unlock coins */}
           <button
-            onClick={() => handleNavigate(HIGHLIGHT_ITEM.path)}
+            onClick={handleUnlockCoins}
+            disabled={primaryCTA.loading}
             className="group flex items-center gap-4 py-3.5 my-3 px-3 rounded-xl bg-hushh-blue/5 border border-hushh-blue/20 w-full text-left hover:bg-hushh-blue/10 transition-colors"
           >
             <div className="w-8 h-8 rounded-full bg-white border border-hushh-blue/20 flex items-center justify-center">

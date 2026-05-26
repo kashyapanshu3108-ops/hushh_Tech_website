@@ -40,13 +40,13 @@ const HushhWalletUpdates = () => {
       <Heading as="h4" fontSize="md" color="grey.300" mb={2}>Download the Hushh Wallet App:</Heading>
       <List spacing={2}>
         <ListItem>
-          <Link display={'flex'} flexDirection={'row'} href="https://bit.ly/hushh-app-ios" className='hushh-gradient' isExternal>
+          <Link display={'flex'} flexDirection={'row'} href="https://testflight.apple.com/join/u6FFaw2B" className='hushh-gradient' isExternal>
           <Image src={AppleIcon} alt="Wallet App Store Link" boxSize="20px" mr={2} />
             App Store Link
           </Link>
         </ListItem>
         <ListItem >
-          <Link display={'flex'} flexDirection={'row'} href="https://bit.ly/hushh-wallet-play-store" className='hushh-gradient' isExternal>
+          <Link display={'flex'} flexDirection={'row'} href="https://play.google.com/store/apps/details?id=com.hushhone.hushh" className='hushh-gradient' isExternal>
           <Image src={PlaystoreIcon} alt="Play Store Icon" boxSize="20px" mr={2} />
             Play Store Link
           </Link>

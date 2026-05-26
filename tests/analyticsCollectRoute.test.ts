@@ -282,4 +282,40 @@ describe("analytics collect route", () => {
       { onConflict: "event_id", ignoreDuplicates: true }
     );
   });
+
+  it("accepts without console-failing when analytics tables are not deployed yet", async () => {
+    sessionSingle.mockResolvedValueOnce({
+      data: null,
+      error: {
+        code: "PGRST205",
+        message: "Could not find the table 'public.site_analytics_sessions' in the schema cache",
+      },
+    });
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const { default: handler } = await import("../api/analytics/collect.js");
+    const req = {
+      method: "POST",
+      headers: {},
+      body: validBody,
+    };
+    const res = createResponse();
+
+    await handler(req, res);
+
+    expect(res.statusCode).toBe(202);
+    expect(res.body).toMatchObject({
+      success: false,
+      accepted: 0,
+      stored: false,
+      reason: "analytics_tables_missing",
+      storedAt: null,
+    });
+    expect(eventUpsert).not.toHaveBeenCalled();
+    expect(console.warn).toHaveBeenCalledWith(
+      "analytics collect skipped:",
+      "analytics_tables_missing"
+    );
+    expect(console.error).not.toHaveBeenCalled();
+  });
 });

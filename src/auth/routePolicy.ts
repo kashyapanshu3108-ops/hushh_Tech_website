@@ -20,6 +20,7 @@ export const PUBLIC_MARKETING_ROUTE_PREFIXES = [
   "/eu-uk-jobs-privacy-policy",
   "/investor-guide",
   "/about",
+  "/philosophy",
   "/services",
   "/career",
   "/community",
@@ -29,9 +30,6 @@ export const PUBLIC_MARKETING_ROUTE_PREFIXES = [
   "/kai",
   "/kai-india",
   "/studio",
-  "/kyc-flow",
-  "/kyc-demo",
-  "/a2a-playground",
 ] as const;
 
 export const AUTHENTICATED_ACCOUNT_ROUTE_PREFIXES = [

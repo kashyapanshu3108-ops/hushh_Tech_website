@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Phase 2 contribution pause
+    url: https://github.com/hushh-labs/hushh_Tech_website/blob/main/CONTRIBUTING.md
+    about: General OSS contributions and feature requests are paused; use the bug form for reproducible bugs only.
   - name: Security vulnerability
     url: https://github.com/hushh-labs/hushh_Tech_website/security/advisories/new
     about: Report security issues privately. Do not open a public issue.

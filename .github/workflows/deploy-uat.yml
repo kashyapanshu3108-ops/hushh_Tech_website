@@ -155,6 +155,49 @@ jobs:
           printf 'SEARCH_CONSOLE_DATA_STATE=all\n' >> "$GITHUB_ENV"
           printf 'SEARCH_CONSOLE_ROW_LIMIT=25\n' >> "$GITHUB_ENV"
 
+          runtime_secret_names=(
+            hushh-tech-supabase-url
+            hushh-tech-supabase-service-role-key
+            hushh-tech-gemini-api-key
+            hushh-tech-analytics-hash-salt
+            hushh-tech-metrics-ga4-allowed-hostnames
+            hushh-tech-metrics-gcp-monitoring-project-id
+            hushh-tech-metrics-gcp-cloud-run-region
+            hushh-tech-metrics-gcp-cloud-run-services
+            hushh-tech-metrics-search-console-site-url
+            hushh-tech-metrics-search-console-type
+            hushh-tech-metrics-search-console-data-state
+            hushh-tech-metrics-search-console-row-limit
+          )
+
+          for secret_name in "${runtime_secret_names[@]}"; do
+            if ! gcloud secrets describe "$secret_name" --project=hushh-tech-uat >/dev/null 2>&1; then
+              echo "::error::Required UAT runtime secret '$secret_name' is missing"
+              exit 1
+            fi
+          done
+
+          gmail_user_secret_present=0
+          gmail_password_secret_present=0
+          if gcloud secrets describe hushh-tech-gmail-user --project=hushh-tech-uat >/dev/null 2>&1; then
+            gmail_user_secret_present=1
+          fi
+          if gcloud secrets describe hushh-tech-gmail-app-password --project=hushh-tech-uat >/dev/null 2>&1; then
+            gmail_password_secret_present=1
+          fi
+
+          if [ "$gmail_user_secret_present" -ne "$gmail_password_secret_present" ]; then
+            echo "::error::UAT Gmail runtime secrets must be configured as a pair."
+            exit 1
+          fi
+
+          if [ "$gmail_user_secret_present" -eq 1 ]; then
+            printf 'GMAIL_RUNTIME_SECRETS_AVAILABLE=1\n' >> "$GITHUB_ENV"
+          else
+            printf 'GMAIL_RUNTIME_SECRETS_AVAILABLE=0\n' >> "$GITHUB_ENV"
+            echo "Optional UAT Gmail runtime secrets are not configured; preserving current Cloud Run behavior without Gmail env bindings."
+          fi
+
       # 3. Build Vite app in runner (FAST — no Docker needed)
       - name: Validate client auth env
         shell: bash
@@ -180,12 +223,23 @@ jobs:
       - name: Deploy to Cloud Run
         shell: bash
         run: |
-          runtime_env="NODE_ENV=staging,SUPABASE_URL=${SUPABASE_URL},SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}"
-          for name in ANALYTICS_HASH_SALT GA4_PROPERTY_ID GA4_ALLOWED_HOSTNAMES GCP_MONITORING_PROJECT_ID GCP_CLOUD_RUN_REGION GCP_CLOUD_RUN_SERVICES SEARCH_CONSOLE_SITE_URL SEARCH_CONSOLE_TYPE SEARCH_CONSOLE_DATA_STATE SEARCH_CONSOLE_ROW_LIMIT; do
-            if [ -n "${!name:-}" ]; then
-              runtime_env="${runtime_env},${name}=${!name}"
-            fi
-          done
+          runtime_env="NODE_ENV=staging,COMMUNITY_CONTENT_BACKEND=gcp,COMMUNITY_CONTENT_COLLECTION=community_posts,COMMUNITY_CONTENT_BUCKET=hushh-tech-community-content-uat,COMMUNITY_CONTENT_CACHE_SECONDS=300,GEMINI_INVESTOR_PROFILE_PROVIDER=vertex,GEMINI_INVESTOR_PROFILE_MODEL=gemini-2.5-flash,GOOGLE_CLOUD_PROJECT=hushh-tech-uat,GOOGLE_CLOUD_LOCATION=us-central1,PROFILE_INTELLIGENCE_API_BASE_URL=https://hushh-ria-intelligence-api-53407187172.us-central1.run.app,PROFILE_INTELLIGENCE_TIMEOUT_MS=180000"
+          runtime_secrets="SUPABASE_URL=hushh-tech-supabase-url:latest"
+          runtime_secrets+=",SUPABASE_SERVICE_ROLE_KEY=hushh-tech-supabase-service-role-key:latest"
+          runtime_secrets+=",GEMINI_API_KEY=hushh-tech-gemini-api-key:latest"
+          if [ "${GMAIL_RUNTIME_SECRETS_AVAILABLE:-0}" = "1" ]; then
+            runtime_secrets+=",GMAIL_USER=hushh-tech-gmail-user:latest"
+            runtime_secrets+=",GMAIL_APP_PASSWORD=hushh-tech-gmail-app-password:latest"
+          fi
+          runtime_secrets+=",ANALYTICS_HASH_SALT=hushh-tech-analytics-hash-salt:latest"
+          runtime_secrets+=",GA4_ALLOWED_HOSTNAMES=hushh-tech-metrics-ga4-allowed-hostnames:latest"
+          runtime_secrets+=",GCP_MONITORING_PROJECT_ID=hushh-tech-metrics-gcp-monitoring-project-id:latest"
+          runtime_secrets+=",GCP_CLOUD_RUN_REGION=hushh-tech-metrics-gcp-cloud-run-region:latest"
+          runtime_secrets+=",GCP_CLOUD_RUN_SERVICES=hushh-tech-metrics-gcp-cloud-run-services:latest"
+          runtime_secrets+=",SEARCH_CONSOLE_SITE_URL=hushh-tech-metrics-search-console-site-url:latest"
+          runtime_secrets+=",SEARCH_CONSOLE_TYPE=hushh-tech-metrics-search-console-type:latest"
+          runtime_secrets+=",SEARCH_CONSOLE_DATA_STATE=hushh-tech-metrics-search-console-data-state:latest"
+          runtime_secrets+=",SEARCH_CONSOLE_ROW_LIMIT=hushh-tech-metrics-search-console-row-limit:latest"
           gcloud run deploy hushh-tech-website \
             --source . \
             --project=hushh-tech-uat \
@@ -198,6 +252,7 @@ jobs:
             --max-instances=3 \
             --port=8080 \
             --update-env-vars="$runtime_env" \
+            --update-secrets="$runtime_secrets" \
             --clear-base-image \
             --quiet
 

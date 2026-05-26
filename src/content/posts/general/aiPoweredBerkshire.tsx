@@ -1,25 +1,13 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Helmet } from "react-helmet";
+import React from "react";
+import GammaEmbed from "../components/GammaEmbed";
 
 const AIPoweredBerkshire = () => {
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    // Open the Gamma site in a new tab
-    window.open('https://hushh-fund-a-wtv9ctn.gamma.site/', '_blank');
-    // Redirect back to community
-    navigate('/community');
-  }, [navigate]);
-  
   return (
-    <>
-      <Helmet>
-        <title>The AI-Powered Berkshire Hathaway | Hushh Fund A</title>
-        <meta name="description" content="Hushh Technologies Fund A Strategy – Investing in the Future of Free Cash Flow" />
-      </Helmet>
-      <div>Redirecting...</div>
-    </>
+    <GammaEmbed
+      title="The AI-Powered Berkshire Hathaway | Hushh Fund A"
+      description="Hushh Technologies Fund A Strategy – Investing in the Future of Free Cash Flow"
+      src="https://hushh-fund-a-wtv9ctn.gamma.site/"
+    />
   );
 };
 

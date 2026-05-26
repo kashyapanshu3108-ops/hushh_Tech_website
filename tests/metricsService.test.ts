@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import WebSocket from "ws";
 
 import {
   __testing,
@@ -8,6 +9,15 @@ import {
 } from "../api/metrics/service.js";
 
 describe("metrics service", () => {
+  it("configures Supabase Realtime with a Node-compatible WebSocket transport", () => {
+    const client = __testing.createSupabaseAdminClient(
+      "https://example.supabase.co",
+      "test-service-role-key"
+    );
+
+    expect(client.realtime.transport).toBe(WebSocket);
+  });
+
   it("builds a Pacific-time rolling window", () => {
     const window = buildRollingWindow({
       now: "2026-04-15T18:30:00.000Z",

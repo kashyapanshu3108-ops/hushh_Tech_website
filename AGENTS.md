@@ -10,12 +10,32 @@ Use it with:
 - `CONTRIBUTING.md`
 - `SECURITY.md`
 
+## Canonical Domains And Typo Recovery
+
+Use these lower-case hostnames as the canonical spellings for production and UAT work:
+
+| Surface | Production | UAT |
+| --- | --- | --- |
+| HushhTech web | `https://hushhtech.com` | `https://uat.hushhtech.com` |
+| Hushh AI | `https://hushh.ai` | `https://uat.hushh.ai` |
+
+- Treat `hashtag.com`, `hustag`, `hushtech`, `hushhTech.com`, and similar variants as likely prompt typos unless a checked-in file proves otherwise.
+- For smoke tests, sitemap generation, robots generation, and deploy evidence, prefer the canonical domains above.
+- If a user uses a misspelling while clearly referring to the HushhTech public site, resolve the task to `hushhtech.com` or `uat.hushhtech.com` based on the requested environment.
+
 ## Main-Branch Grounding
 
 - Treat `main` as the repository source of truth for current behavior, runtime wiring, and CI policy.
 - Review PRs against what is currently true on `main`, not only against what the PR description claims.
 - If a behavior, service, or invariant is not visible in this repository, say that it is not shown here.
 - Do not assume hidden infrastructure, hidden schemas, or hidden secrets unless a checked-in file explicitly proves them.
+
+## Protected Branch Ownership
+
+- GitHub repository rulesets are the enforcement surface for `main` and `develop`; classic branch protection is not the source of truth.
+- Only `@ankitkumarsingh1702` (GitHub user id `94732725`) may bypass protected-branch pull request review rules or merge into `main` or `develop`.
+- Other collaborators may push topic branches and open PRs, but they must not update protected refs or merge protected-branch PRs.
+- If live GitHub settings disagree with this section, treat the live settings as drift and repair the ruleset or repository access before relying on the merge path.
 
 ## What This Repository Owns
 

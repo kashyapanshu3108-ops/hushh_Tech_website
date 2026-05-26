@@ -10,9 +10,9 @@ const Dmu11apr = () => {
       </Heading>
       <Text mb={4}>Date: April 11, 2025</Text>
 
-      {/* <Divider my={4} borderColor="black" /> */}
+      <Divider my={4} borderColor="black" />
 
-      {/* <Heading as="h3" fontSize="lg" color="black" mb={4}>
+      <Heading as="h3" fontSize="lg" color="black" mb={4}>
         Weekly Market Summary:
       </Heading>
       <VStack align="start" spacing={2}>
@@ -38,10 +38,10 @@ const Dmu11apr = () => {
         <Text mt={2}>
           Another strong week for our Aloha strategy, converting market volatility into consistent income through our disciplined approach.
         </Text>
-      </VStack> */}
+      </VStack>
 
-      {/* <Divider my={4} borderColor="black" /> */}
-{/* 
+      <Divider my={4} borderColor="black" />
+
       <Heading as="h3" fontSize="lg" color="black" mb={4}>
         Strategy & Outlook:
       </Heading>
@@ -52,7 +52,7 @@ const Dmu11apr = () => {
         <Text mt={2}>
           Technical indicators suggest increasing volatility ahead, which aligns perfectly with our "Sell the Wall" strategy. We remain positioned to benefit from time decay and fear-driven premiums in the options market.
         </Text>
-      </VStack> */}
+      </VStack>
 
       <Divider my={4} borderColor="black" />
 
@@ -65,4 +65,4 @@ const Dmu11apr = () => {
   );
 };
 
-export default Dmu11apr; 
+export default Dmu11apr;

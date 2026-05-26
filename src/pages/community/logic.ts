@@ -5,9 +5,7 @@
  */
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useToast } from "@chakra-ui/react";
-import config from "../../resources/config/config";
 import { getPosts, PostData } from "../../data/posts";
 import { formatShortDate, parseDate } from "../../utils/dateFormatter";
 import { useAuthSession } from "../../auth/AuthSessionProvider";
@@ -19,6 +17,10 @@ import {
   trackSearchEvent,
   trackSiteEvent,
 } from "../../services/analytics/siteAnalytics";
+import {
+  fetchCommunityPosts,
+  type CommunityPostSummary,
+} from "../../services/communityContent";
 
 /* ── Constants ── */
 export const NDA_OPTION = "Sensitive Documents (NDA approval Req.)";
@@ -28,20 +30,12 @@ export const PINNED_SLUGS = [
   "general/sell-the-wall-featured",
 ];
 
-const ALOHA_FUNDS_API_BASE =
-  (import.meta as any).env?.VITE_MARKET_SUPABASE_URL ||
-  "";
-const ALOHA_FUNDS_API_KEY =
-  (import.meta as any).env?.VITE_MARKET_SUPABASE_KEY ||
-  "";
-
 /* ── Types ── */
 export interface UnifiedPost {
   id: string;
   title: string;
   date: string;
-  slug?: string;
-  isApiReport?: boolean;
+  slug: string;
   description?: string;
   category?: string;
 }
@@ -73,10 +67,6 @@ export const formatDisplayDate = (dateStr: string): string =>
   formatShortDate(dateStr).toUpperCase();
 
 export const getPostUrl = (post: UnifiedPost): string => {
-  if (post.isApiReport) return `/reports/${post.id}`;
-  if (post.slug === "general/ai-powered-berkshire-hathaway")
-    return "/ai-powered-berkshire";
-  if (post.slug === "general/sell-the-wall-featured") return "/sell-the-wall";
   return `/community/${post.slug}`;
 };
 
@@ -91,8 +81,8 @@ export const useCommunityListLogic = () => {
   /* local posts */
   const localPosts = useMemo<PostData[]>(() => getPosts(), []);
 
-  /* API reports */
-  const [apiReports, setApiReports] = useState<UnifiedPost[]>([]);
+  /* Public GCP-backed community posts */
+  const [publicPosts, setPublicPosts] = useState<CommunityPostSummary[]>([]);
   const [apiLoading, setApiLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
@@ -105,41 +95,26 @@ export const useCommunityListLogic = () => {
   const [ndaMetadata, setNdaMetadata] = useState<any>(null);
   const [ndaLoading, setNdaLoading] = useState(false);
 
-  /* fetch API reports */
+  /* fetch public community posts through the same-origin Cloud Run API */
   useEffect(() => {
-    const fetchReports = async () => {
+    const fetchPosts = async () => {
       setApiLoading(true);
       setApiError(null);
       try {
-        const url = `${ALOHA_FUNDS_API_BASE}/rest/v1/reports?select=*`;
-        const resp = await axios.get<UnifiedPost[]>(url, {
-          headers: {
-            apikey: ALOHA_FUNDS_API_KEY,
-            Authorization: `Bearer ${ALOHA_FUNDS_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-        });
-        setApiReports(
-          resp.data
-            .filter((r) => r.id && r.date)
-            .map((r) => ({ ...r, isApiReport: true }))
-        );
+        setPublicPosts(await fetchCommunityPosts());
       } catch (err: any) {
         console.error(err);
-        setApiError(err.message || "Failed to fetch reports");
+        setPublicPosts([]);
+        setApiError(err.message || "Failed to fetch community posts");
       } finally {
         setApiLoading(false);
         mountRef.current = false;
       }
     };
-    if (mountRef.current) fetchReports();
+    if (mountRef.current) fetchPosts();
   }, []);
 
   /* category lists */
-  const publicPosts = useMemo(
-    () => localPosts.filter((p) => p.accessLevel === "Public"),
-    [localPosts]
-  );
   const ndaPosts = useMemo(
     () => localPosts.filter((p) => p.accessLevel === "NDA"),
     [localPosts]
@@ -159,50 +134,21 @@ export const useCommunityListLogic = () => {
 
   /* combine + sort all posts */
   const allContentSorted = useMemo<UnifiedPost[]>(() => {
-    const localMarket = localPosts
-      .filter(
-        (p) =>
-          p.accessLevel === "Public" &&
-          (p.category.toLowerCase().includes("market") ||
-            p.slug.toLowerCase().includes("market"))
-      )
-      .map((p) => ({
-        id: p.slug,
-        title: p.title,
-        date: p.publishedAt,
-        slug: p.slug,
-        isApiReport: false,
-        description:
-          p.description ||
-          getPostDescription({ id: p.slug, title: p.title, date: p.publishedAt }),
-        category: p.category,
-      }));
-
-    const regs = publicPosts
-      .filter(
-        (p) =>
-          !p.slug.toLowerCase().includes("market") &&
-          !["market", "market updates"].includes(p.category.toLowerCase())
-      )
-      .map((p) => ({
-        id: p.slug,
-        title: p.title,
-        date: p.publishedAt,
-        slug: p.slug,
-        isApiReport: false,
-        description:
-          p.description ||
-          getPostDescription({ id: p.slug, title: p.title, date: p.publishedAt }),
-        category: p.category,
-      }));
-
-    const merged = [...regs, ...localMarket, ...apiReports];
-    return merged.sort((a, b) => {
+    return publicPosts.map((p) => ({
+      id: p.slug,
+      title: p.title,
+      date: p.publishedAt || p.date,
+      slug: p.slug,
+      description:
+        p.description ||
+        getPostDescription({ id: p.slug, title: p.title, date: p.publishedAt || p.date }),
+      category: p.category,
+    })).sort((a, b) => {
       const da = parseDate(a.date)?.getTime() || 0;
       const db = parseDate(b.date)?.getTime() || 0;
       return db - da;
     });
-  }, [publicPosts, localPosts, apiReports]);
+  }, [publicPosts]);
 
   /* pinning */
   const pinnedAllContent = useMemo<UnifiedPost[]>(() => {
@@ -232,7 +178,6 @@ export const useCommunityListLogic = () => {
         title: p.title,
         date: p.publishedAt,
         slug: p.slug,
-        isApiReport: false,
         description:
           p.description ||
           getPostDescription({ id: p.slug, title: p.title, date: p.publishedAt }),
@@ -341,10 +286,10 @@ export const useCommunityListLogic = () => {
       properties: {
         surface: "community",
         category: post.category || "unknown",
-        result: post.isApiReport ? "api-report" : "local-post",
+        result: selectedCategory === NDA_OPTION ? "local-nda-post" : "gcp-community-post",
       },
     });
-  }, []);
+  }, [selectedCategory]);
 
   return {
     /* data */

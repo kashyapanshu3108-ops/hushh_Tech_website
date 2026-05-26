@@ -13,6 +13,10 @@ vi.mock("../src/services/runtime/mainWeb", () => ({
 }));
 
 const loadedChartPattern = /\/market-updates\/dmu-test\/[12]\.png$/;
+const testMediaItems = [
+  { name: "1.png", url: "/api/community/assets/market-updates/dmu-test/1.png", type: "image" as const },
+  { name: "2.png", url: "/api/community/assets/market-updates/dmu-test/2.png", type: "image" as const },
+];
 
 const flushPromises = async () => {
   for (let i = 0; i < 5; i += 1) {
@@ -81,6 +85,7 @@ describe("MarketUpdateGallery accessibility", () => {
           null,
           React.createElement(MarketUpdateGallery, {
             date: "dmu-test",
+            mediaItems: testMediaItems,
           }),
         ),
       );
@@ -118,5 +123,49 @@ describe("MarketUpdateGallery accessibility", () => {
         'img[alt="Full-screen market analysis chart 2"]',
       ),
     ).not.toBeNull();
+  });
+
+  it("keeps missing media silent by default on public posts", async () => {
+    await act(async () => {
+      root.render(
+        React.createElement(
+          ChakraProvider,
+          null,
+          React.createElement(MarketUpdateGallery, {
+            date: "dmu-missing",
+            imageCount: 1,
+          }),
+        ),
+      );
+    });
+    await flushPromises();
+
+    expect(container.textContent).not.toContain("No images available");
+  });
+
+  it("does not blind-probe legacy filenames for missing folders", async () => {
+    const imageCreatesBefore = createElementSpy.mock.calls.filter(
+      ([tagName]) => String(tagName).toLowerCase() === "img",
+    ).length;
+
+    await act(async () => {
+      root.render(
+        React.createElement(
+          ChakraProvider,
+          null,
+          React.createElement(MarketUpdateGallery, {
+            date: "dmu-missing",
+            imageCount: 6,
+          }),
+        ),
+      );
+    });
+    await flushPromises();
+
+    const imageCreatesAfter = createElementSpy.mock.calls.filter(
+      ([tagName]) => String(tagName).toLowerCase() === "img",
+    ).length;
+
+    expect(imageCreatesAfter - imageCreatesBefore).toBe(0);
   });
 });

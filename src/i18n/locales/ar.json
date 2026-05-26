@@ -1,6 +1,5 @@
 {
   "nav": {
-    "ourPhilosophy": "فلسفتنا",
     "fundA": "الصندوق أ",
     "community": "المجتمع",
     "faq": "الأسئلة الشائعة",
@@ -12,7 +11,6 @@
     "logout": "تسجيل الخروج",
     "viewProfile": "عرض الملف الشخصي",
     "home": "الرئيسية",
-    "kycStudio": "استوديو KYC ألفا",
     "deleteAccount": "حذف الحساب"
   },
   "deleteAccount": {

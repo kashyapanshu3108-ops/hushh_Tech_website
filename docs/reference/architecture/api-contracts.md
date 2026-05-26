@@ -25,6 +25,14 @@ This document maps the current Hushhtech API contract surfaces that matter durin
 2. `api/metrics/service.js`
 3. `server.js`
 
+### Standalone Cloud Run services
+
+1. `cloud-run/deep-intelligence-api`
+
+The Deep Intelligence API is a separate consent-gated Gemini Deep Research
+service. Its full contract and safety boundary live in
+`docs/reference/architecture/deep-intelligence-api.md`.
+
 ## Contract rules
 
 1. Treat any browser page and its backing API route as one behavior contract.

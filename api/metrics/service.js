@@ -1,5 +1,6 @@
-import { createClient } from "@supabase/supabase-js";
 import { google } from "googleapis";
+
+import { createSupabaseServerClient } from "../shared/supabaseServerClient.js";
 
 const ANALYTICS_SCOPE = "https://www.googleapis.com/auth/analytics.readonly";
 const SEARCH_CONSOLE_SCOPE = "https://www.googleapis.com/auth/webmasters.readonly";
@@ -403,12 +404,7 @@ function buildWindowFetchStartIso(window) {
 }
 
 function createSupabaseAdminClient(url, serviceRoleKey) {
-  return createClient(url, serviceRoleKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
+  return createSupabaseServerClient(url, serviceRoleKey);
 }
 
 function getWebsiteSupabaseConfig(env) {
@@ -2080,6 +2076,7 @@ export async function buildMetricsSummary(options = {}) {
 export const __testing = {
   buildFunnel,
   buildSearchPerformanceReport,
+  createSupabaseAdminClient,
   fetchSiteAnalytics,
   fetchSearchPerformanceMetrics,
   fetchSupabaseStackMetrics,

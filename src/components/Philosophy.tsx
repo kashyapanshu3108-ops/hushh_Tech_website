@@ -1,139 +1,117 @@
-import lineGraph from '../../files/lineGraph.svg';
-import { FaLinkedin } from "react-icons/fa";
+import HushhTechHeader from "./hushh-tech-header/HushhTechHeader";
+
+const playfair = { fontFamily: "'Playfair Display', serif" };
+
+const philosophyPillars = [
+  {
+    icon: "database",
+    title: "Data as an Asset",
+    description:
+      "We treat data as a disciplined input for investor outcomes, not as a product to be extracted.",
+  },
+  {
+    icon: "show_chart",
+    title: "Volatility With Rules",
+    description:
+      "Every strategy is filtered through liquidity, risk limits, and a clear view of downside exposure.",
+  },
+  {
+    icon: "psychology",
+    title: "Human-Led AI",
+    description:
+      "Models help us see faster, but human judgment sets the guardrails and owns the decision.",
+  },
+];
+
+const operatingPrinciples = [
+  "Prefer durable free-cash-flow businesses over narrative-driven trades.",
+  "Use automation to remove emotional timing, not to remove accountability.",
+  "Keep privacy, transparency, and investor trust as first-class design constraints.",
+  "Build for compounding resilience across market cycles.",
+];
 
 export default function Philosophy() {
   return (
-    <main className="max-w-7xl mx-auto px-4 py-12">
-      {/* Heading Section */}
-      <div className="text-center mb-16">
-        <h1 className="text-3xl md:text-4xl font-bold mb-6">Investment meets Innovation</h1>
-        <p className="text-base md:text-lg mb-8">
-          We're building a movement toward a future where wealth is built through <span className="text-red-600">intelligent, responsible investing</span>,
-          powered by <span className="font-medium">cutting-edge mathematical models, statistical analysis, and artificial intelligence (AI)</span>.
-        </p>
+    <div className="min-h-screen bg-white antialiased text-gray-900 selection:bg-hushh-blue selection:text-white">
+      <HushhTechHeader />
 
-        <div className="w-48 h-48 md:w-64 md:h-64 mx-auto mb-8 flex items-center justify-center bg-white rounded-lg overflow-hidden">
-          {/* Decorative hero graphic; headings and body copy carry the message. */}
-          <img src={lineGraph} alt="" className="w-full h-full object-contain" />
-        </div>
-
-        <p className="text-base md:text-lg mb-16">
-          Our approach is built on <span className="font-medium">rigorous research, strategic precision</span>, and an
-          <span className="font-medium"> unwavering focus</span> on delivering consistent, sustainable growth for our investors.
-        </p>
-      </div>
-
-      {/* Mission Section */}
-      <section className="text-center mb-16">
-        <h2 className="text-2xl md:text-3xl font-bold mb-4">Our <span className="text-red-600">Mission</span></h2>
-        <p className="text-base md:text-lg mb-4">
-          To empower individuals and institutions to achieve long-term financial success
-          through <span className="font-medium">data-driven, intelligent investment strategies</span>.
-        </p>
-        <p className="text-sm text-gray-600">
-          We believe that investment should be both powerful and personal—designed to work for people, not just portfolios.
-          We're committed to transparency and ethical data use, ensuring that wealth creation is both impactful and aligned with
-          our investors' values.
-        </p>
-      </section>
-
-      {/* What We Do Section */}
-      <section className="text-center mb-16">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8">What We Do</h2>
-        <p className="text-base md:text-lg mb-4">
-          We specialize in generating income through innovative options-based strategies, capitalizing on market opportunities.
-        </p>
-        <p className="text-sm text-gray-600">
-          Our proprietary strategies, such as <span className="text-red-600">Sell the Wall</span> and <span className="text-red-600">Strategy 69</span>, are meticulously designed to generate
-          consistent "alpha income" by leveraging price movement and volatility.
-        </p>
-      </section>
-
-      {/* Investment Philosophy Section */}
-      <section className="text-center mb-16">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8">Our <span className="text-red-600">Investment Philosophy</span></h2>
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
-          <div>
-            <div className="mb-4" aria-hidden>
-              <span className="text-4xl">∫𝑥</span>
-            </div>
-            <h3 className="text-xl font-bold mb-2">Math-Driven Precision</h3>
-            <p className="text-sm">
-              We apply advanced mathematical models to guide our investment decisions, ensuring consistency and removing bias.
-            </p>
-          </div>
-          <div>
-            <div className="mb-4" aria-hidden>
-              <span className="text-4xl">🧠</span>
-            </div>
-            <h3 className="text-xl font-bold mb-2">AI-Powered Insight</h3>
-            <p className="text-sm">
-              Leveraging AI and machine learning, we identify market inefficiencies and predict opportunities in real-time.
-            </p>
-          </div>
-          <div>
-            <div className="mb-4" aria-hidden>
-              <span className="text-4xl">⚖️</span>
-            </div>
-            <h3 className="text-xl font-bold mb-2">Long-Term Stability</h3>
-            <p className="text-sm">
-              We focus on consistent returns through balanced strategies and prudent risk management.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Choose Us Section */}
-      <section className="text-center mb-16 space-y-8">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8">Why Choose Hu<span className="text-red-600">$$</span>h?</h2>
-        <div>
-          <h3 className="text-xl font-bold mb-2">Simplicity Meets Sophistication</h3>
-          <p className="text-sm">
-            Our models are complex, but our approach is straightforward—designed to perform in any market.
+      <main
+        id="main-content"
+        className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-24"
+      >
+        <section className="max-w-3xl" aria-labelledby="philosophy-heading">
+          <p className="text-[10px] uppercase tracking-[0.22em] text-hushh-blue font-semibold mb-4">
+            Investment philosophy
           </p>
-        </div>
-        <div>
-          <h3 className="text-xl font-bold mb-2">Unlocking Options Income</h3>
-          <p className="text-sm">
-            Our strategies capture premium income from market movements, creating a consistent revenue stream.
-          </p>
-        </div>
-        <div>
-          <h3 className="text-xl font-bold mb-2">Human-Centric Wealth Creation</h3>
-          <p className="text-sm">
-            We respect the privacy, goals, and interests of our investors, ensuring ethical and impactful wealth creation.
-          </p>
-        </div>
-      </section>
-
-      {/* Vision Section */}
-      <section className="text-center mb-16">
-        <h2 className="text-2xl md:text-3xl font-bold mb-4">Our <span className="text-red-600">Vision</span></h2>
-        <p className="font-bold mb-4">Our goal is to create lasting wealth that empowers financial freedom for generations.</p>
-        <p className="text-sm text-gray-600">
-          At Hushh Technologies LLC, we blend innovative strategies with human-centric values to deliver exceptional value.
-        </p>
-      </section>
-
-      {/* Join Us Section */}
-      <section className="text-center">
-        <h2 className="text-2xl md:text-3xl font-bold mb-6">Join <span className="text-red-600">Us</span></h2>
-        <p className="mb-8">
-          Whether you're an individual or an institution, Hushh{' '}
-          <span aria-hidden>🤫</span> Technologies LLC invites you to join us on our journey.
-        </p>
-        <div className="flex justify-center">
-          <a
-            href="https://www.linkedin.com/in/manishsainani/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Open Manish Sainani's LinkedIn profile"
-            className="text-red-600 hover:text-red-700 flex items-center rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+          <h1
+            id="philosophy-heading"
+            className="text-[2.75rem] leading-[1.08] font-normal text-black tracking-tight sm:text-[3.25rem] lg:text-[4rem]"
+            style={playfair}
           >
-            <FaLinkedin aria-hidden="true" focusable="false" className="h-6 w-6" />
-          </a>
-        </div>
-      </section>
-    </main>
+            Data. Volatility.{" "}
+            <span className="text-gray-400 italic font-light">Alpha.</span>
+          </h1>
+          <p className="text-gray-500 text-sm font-light mt-5 leading-relaxed max-w-2xl sm:text-base">
+            Hushh Technologies blends rigorous research, risk-aware execution,
+            and AI-assisted analysis to build strategies that can compound with
+            patience instead of chasing every market spike.
+          </p>
+        </section>
+
+        <section
+          className="grid grid-cols-1 gap-4 mt-12 md:grid-cols-3"
+          aria-label="Philosophy pillars"
+        >
+          {philosophyPillars.map((pillar) => (
+            <article
+              key={pillar.title}
+              className="rounded-2xl border border-gray-200/70 bg-[#F5F5F7] p-6 min-h-[220px] transition-colors hover:border-hushh-blue/30"
+            >
+              <div className="w-11 h-11 rounded-full border border-hushh-blue/15 bg-white flex items-center justify-center mb-6">
+                <span
+                  className="material-symbols-outlined thin-icon text-hushh-blue"
+                  aria-hidden="true"
+                >
+                  {pillar.icon}
+                </span>
+              </div>
+              <h2
+                className="text-2xl font-normal text-black mb-3"
+                style={playfair}
+              >
+                {pillar.title}
+              </h2>
+              <p className="text-sm text-gray-500 leading-relaxed font-light">
+                {pillar.description}
+              </p>
+            </article>
+          ))}
+        </section>
+
+        <section className="mt-14 rounded-2xl border border-gray-200/70 bg-white p-6 sm:p-8">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-semibold mb-5">
+            Operating principles
+          </p>
+          <div className="grid gap-3 md:grid-cols-2">
+            {operatingPrinciples.map((principle) => (
+              <div
+                key={principle}
+                className="flex items-start gap-3 rounded-xl border border-gray-100 bg-gray-50 px-4 py-4"
+              >
+                <span
+                  className="material-symbols-outlined thin-icon text-ios-green text-lg mt-0.5"
+                  aria-hidden="true"
+                >
+                  check_circle
+                </span>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {principle}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }

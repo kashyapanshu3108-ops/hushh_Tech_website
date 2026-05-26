@@ -2,7 +2,7 @@
 // Works with Gmail SMTP (Node.js compatible)
 
 import nodemailer from 'nodemailer';
-import { createClient } from '@supabase/supabase-js';
+import { createSupabaseServerClient } from './shared/supabaseServerClient.js';
 
 // CORS headers
 const corsHeaders = {
@@ -19,12 +19,7 @@ function createSupabaseAdminClient() {
     throw new Error('Supabase server environment variables are missing');
   }
 
-  return createClient(supabaseUrl, serviceRoleKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
+  return createSupabaseServerClient(supabaseUrl, serviceRoleKey);
 }
 
 async function resolvePublicProfileOwner(slug) {

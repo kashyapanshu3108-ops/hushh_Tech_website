@@ -58,7 +58,7 @@ describe("HomePage focus order", () => {
     const buttons = Array.from(container.querySelectorAll("button"));
 
     expect(buttons.map((button) => button.textContent?.trim())).toEqual([
-      "Complete Your Hushh Profilearrow_forward",
+      "Invest With Hushharrow_forward",
       "Discover Fund A",
       "Performance Detailsarrow_forward",
       "Explore Our Approacharrow_right_alt",

@@ -25,7 +25,7 @@ const navItems: NavItem[] = [
     label: 'Home',
     icon: FiHome,
     path: '/',
-    matchPaths: ['/our-philosophy'],
+    matchPaths: [],
   },
   {
     id: 'fund',
@@ -46,7 +46,7 @@ const navItems: NavItem[] = [
     label: 'Profile',
     icon: FiUser,
     path: '/hushh-user-profile',
-    matchPaths: ['/contact', '/faq'],
+    matchPaths: [],
   },
 ];
 
@@ -56,9 +56,6 @@ const hiddenOnPages = [
   '/login',
   '/signup',
   '/auth',
-  '/kyc-flow',
-  '/kyc-demo',
-  '/a2a-playground',
   '/hushh-user-profile', // Hide nav on profile page for better UX (like onboarding)
 ];
 

@@ -125,12 +125,6 @@ export default function Footer() {
                 >
                   Contact
                 </a>
-                <a 
-                  href="/kyc-verification" 
-                  className="py-2 text-gray-300 hover:text-white text-base font-medium flex items-center justify-between group block transition-colors duration-200"
-                >
-                  KYC Verification
-                </a>
               </div>
             </div>
           </nav>

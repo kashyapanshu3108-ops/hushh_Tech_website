@@ -4,6 +4,18 @@ Thanks for contributing to Hushh Tech Website.
 
 All contributions are accepted under the Apache License, Version 2.0.
 
+## Rustic Phase 2 contribution pause
+
+General open-source contributions and feature requests are paused during Rustic Phase 2. The public community lane is now reproducible bug reporting through GitHub Issues.
+
+- Use the Phase 2 bug report form for public bugs.
+- Do not open public issues for security vulnerabilities, privacy issues, secret leaks, or exploit reports. Follow [SECURITY.md](SECURITY.md).
+- Impact points are awarded for accepted bug reports only after maintainers verify that the bug is officially resolved.
+- External bug-fix PRs are invite-only. A contributor PR must link an accepted issue with `Fixes #123`, `Closes #123`, or `Resolves #123`, and that issue must carry both `phase2:accepted` and `phase2:invited-pr`.
+- Normal DCO, CI, CODEOWNERS, and maintainer review gates still apply.
+
+See [Rustic Phase 2 Bug Impact Workflow](docs/reference/operations/rustic-phase-2-bug-impact.md).
+
 ## Before you start
 
 - Read [README.md](README.md) for the repo layout.
@@ -30,6 +42,7 @@ npm run security:audit
 
 ## Branching and pull requests
 
+- During Rustic Phase 2, do not open unsolicited external PRs. Report the bug first and wait for maintainer invitation if a contributor PR is appropriate.
 - Do not push directly to `main`.
 - Do not push directly to `develop`.
 - Create a topic branch from `main`.

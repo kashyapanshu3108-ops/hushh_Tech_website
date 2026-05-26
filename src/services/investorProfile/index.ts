@@ -41,11 +41,11 @@ function normalizePublicInvestorProfileRecord(
  * Flow:
  * 1. Get authenticated user
  * 2. Check if profile already exists
- * 3. Call Supabase Edge Function to generate AI-powered investor profile
+ * 3. Call same-origin GCP API to generate AI-powered investor profile
  * 4. Save to Supabase investor_profiles table
  * 5. Return complete profile record
  * 
- * SECURITY: AI generation now happens in Supabase Edge Function with secure API key storage
+ * SECURITY: AI generation happens in the Cloud Run API with server-side Gemini key storage.
  */
 export async function createInvestorProfile(
   input: InvestorProfileInput
@@ -81,7 +81,7 @@ export async function createInvestorProfile(
   // 3. Enrich context from input (done client-side, no sensitive data)
   const derivedContext = await enrichContext(input);
   
-  // 4. Generate AI-powered investor profile using SECURE Edge Function
+  // 4. Generate AI-powered investor profile using the secure Cloud Run API
   const result = await generateInvestorProfileAPI(input);
   
   if (!result.success || !result.profile) {

@@ -8,6 +8,7 @@ import { useToast, useClipboard } from '@chakra-ui/react';
 import { useFooterVisibility } from '../../utils/useFooterVisibility';
 import resources from '../../resources/resources';
 import { generateInvestorProfile } from '../../services/investorProfile/apiClient';
+import { generateProfileIntelligence } from '../../services/profileIntelligence/apiClient';
 import {
   APPLE_WALLET_SUPPORT_MESSAGE,
   buildGoldPassPreviewModel,
@@ -18,6 +19,7 @@ import {
   launchGoogleWalletPass,
 } from '../../services/walletPass';
 import { InvestorProfile, FIELD_LABELS, VALUE_LABELS } from '../../types/investorProfile';
+import type { ShadowProfile } from '../../types/shadowProfile';
 import { calculateNWSFromDB, NWSResult } from '../../services/networkScore/calculateNWS';
 import { useAuthSession } from '../../auth/AuthSessionProvider';
 import { buildLoginRedirectPath } from '../../auth/routePolicy';
@@ -114,12 +116,14 @@ export const useHushhUserProfileLogic = () => {
   const [form, setForm] = useState<FormState>(defaultFormState);
   const [userId, setUserId] = useState<string | null>(null);
   const [investorProfile, setInvestorProfile] = useState<InvestorProfile | null>(null);
+  const [shadowProfile, setShadowProfile] = useState<ShadowProfile | null>(null);
   const [profileSlug, setProfileSlug] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   // Per-API status for non-blocking background processing
-  type ApiStatus = 'idle' | 'running' | 'done' | 'error';
+  type ApiStatus = 'idle' | 'running' | 'done' | 'error' | 'skipped';
   const [investorStatus, setInvestorStatus] = useState<ApiStatus>('idle');
-  const isProcessing = investorStatus === 'running';
+  const [intelligenceStatus, setIntelligenceStatus] = useState<ApiStatus>('idle');
+  const isProcessing = investorStatus === 'running' || intelligenceStatus === 'running';
   const [hasOnboardingData, setHasOnboardingData] = useState(false);
   const [isApplePassLoading, setIsApplePassLoading] = useState(false);
   const [isGooglePassLoading, setIsGooglePassLoading] = useState(false);
@@ -157,7 +161,15 @@ export const useHushhUserProfileLogic = () => {
   }, []);
 
   useEffect(() => {
-    if (investorStatus !== 'running') {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isProcessing) {
       if (timerRef.current) {
         stopTimer();
       }
@@ -165,13 +177,7 @@ export const useHushhUserProfileLogic = () => {
         setLoading(false);
       }
     }
-
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-    };
-  }, [investorStatus, loading, stopTimer]);
+  }, [isProcessing, loading, stopTimer]);
 
   useEffect(() => {
     let active = true;
@@ -380,6 +386,14 @@ export const useHushhUserProfileLogic = () => {
           if (existingProfile.investor_profile) {
             setInvestorProfile(existingProfile.investor_profile);
             setInvestorStatus('done');
+          }
+
+          if (existingProfile.shadow_profile) {
+            const existingShadowProfile = existingProfile.shadow_profile as ShadowProfile;
+            setShadowProfile(existingShadowProfile);
+            if (existingShadowProfile.profileIntelligence) {
+              setIntelligenceStatus('done');
+            }
           }
           
           // Prefill form from investor_profiles table
@@ -595,6 +609,9 @@ export const useHushhUserProfileLogic = () => {
     // ── Start background processing ──
     setLoading(true);
     setInvestorStatus('running');
+    const zipCode = form.zipCode.trim();
+    const hasIntelligenceZip = Boolean(zipCode);
+    setIntelligenceStatus(hasIntelligenceZip ? 'running' : 'skipped');
     startTimer();
 
     toast({
@@ -604,6 +621,16 @@ export const useHushhUserProfileLogic = () => {
       duration: 5000,
       isClosable: true,
     });
+
+    if (!hasIntelligenceZip) {
+      toast({
+        title: "Profile Intelligence skipped",
+        description: "Add a ZIP code to research public profile signals. Investor profile generation will continue.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
 
     // ── API 1: Investor Profile (fire-and-forget) ──
     generateInvestorProfile({
@@ -630,6 +657,42 @@ export const useHushhUserProfileLogic = () => {
       console.error("[Profile] Investor profile exception:", err);
       toast({ title: "Investor profile failed", description: "Network error — will retry later", status: "warning", duration: 4000 });
     });
+
+    // ── API 2: Profile Intelligence (fire-and-forget; independent from investor profile) ──
+    if (hasIntelligenceZip) {
+      generateProfileIntelligence({
+        name: form.name,
+        email: form.email,
+        zipCode,
+      }).then((result) => {
+        if (result.success && result.shadowProfile) {
+          setShadowProfile(result.shadowProfile);
+          setIntelligenceStatus('done');
+          toast({ title: "Profile intelligence ready ✓", status: "success", duration: 3000 });
+          saveToSupabase({ shadow_profile: result.shadowProfile });
+        } else if (result.skipped) {
+          setIntelligenceStatus('skipped');
+        } else {
+          setIntelligenceStatus('error');
+          console.error("[Profile] Profile intelligence error:", result.error);
+          toast({
+            title: "Profile intelligence failed",
+            description: result.error || "Investor profile generation will continue",
+            status: "warning",
+            duration: 4000,
+          });
+        }
+      }).catch((err) => {
+        setIntelligenceStatus('error');
+        console.error("[Profile] Profile intelligence exception:", err);
+        toast({
+          title: "Profile intelligence failed",
+          description: "Investor profile generation will continue",
+          status: "warning",
+          duration: 4000,
+        });
+      });
+    }
 
   };
 
@@ -884,8 +947,8 @@ export const useHushhUserProfileLogic = () => {
   });
 
   return {
-    form, setForm, userId, investorProfile, setInvestorProfile, profileSlug,
-    loading, loadingSeconds, isProcessing, investorStatus,
+    form, setForm, userId, investorProfile, setInvestorProfile, shadowProfile, profileSlug,
+    loading, loadingSeconds, isProcessing, investorStatus, intelligenceStatus,
     setLoading, hasOnboardingData, isApplePassLoading, isGooglePassLoading,
     isWalletPreviewOpen, googleWalletSupported, googleWalletSupportMessage,
     appleWalletSupported, appleWalletSupportMessage: APPLE_WALLET_SUPPORT_MESSAGE,

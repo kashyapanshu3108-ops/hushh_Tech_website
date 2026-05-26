@@ -6,9 +6,20 @@ const Dmu9apr = () => {
   return (
     <Box color="black" borderRadius="md">
       <Heading as="h2" fontSize="2xl" mb={4} color="black">
-        🤫 Daily Market Update
+        🤫 Daily Market Snapshot - April 9, 2025
       </Heading>
       <Text mb={4}>Date: April 9, 2025</Text>
+
+      <Divider my={4} borderColor="black" />
+
+      <Heading as="h3" fontSize="lg" color="black" mb={4}>
+        Market Overview:
+      </Heading>
+      <VStack align="start" spacing={2}>
+        <Text>
+          Market update with supporting charts and data for April 9, 2025.
+        </Text>
+      </VStack>
 
       <Divider my={4} borderColor="black" />
 

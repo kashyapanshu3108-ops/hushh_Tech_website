@@ -46,4 +46,5 @@ package-lock.json
 .gitignore
 *.sh
 *.txt
+!dist/robots.txt
 *.tsbuildinfo

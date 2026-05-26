@@ -30,11 +30,9 @@ import DeleteAccountPage from './pages/delete-account';
 import { ReactNode } from 'react';
 import Profile from './pages/profile';
 import AuthCallback from './pages/AuthCallback';
-import KYCVerificationPage from './pages/kyc-verification/page';
 import NDARequestModalComponent from './components/NDARequestModal';
 import UserProfilePage from './pages/user-profile/page';
 import InvestorProfilePage from './pages/investor-profile';
-import KYCFormPage from './pages/kyc-form/page';
 import DiscoverFundA from './pages/discover-fund-a';
 import SellTheWallPage from './pages/sell-the-wall';
 import AIPoweredBerkshirePage from './pages/ai-powered-berkshire';
@@ -61,9 +59,6 @@ import VerifyIdentityPage from './pages/onboarding/verify-identity/ui';
 import VerifyCompletePage from './pages/onboarding/verify-complete/ui';
 import MeetCeoPage from './pages/onboarding/meet-ceo/ui';
 import InvestorGuidePage from './pages/onboarding/InvestorGuide';
-import KYCDemoPage from './pages/kyc-demo';
-import KycFlowPage from './pages/kyc-flow';
-import A2APlaygroundPage from './pages/a2a-playground';
 import ReceiptGeneratorPage from './pages/receipt-generator';
 import DeveloperDocsPage from './pages/developer-docs';
 import MobileBottomNav from './components/MobileBottomNav';
@@ -90,9 +85,6 @@ const ContentWrapper = ({ children }: { children: ReactNode }) => {
   const isAuthCallback = location.pathname.startsWith('/auth/callback');
   const isUserRegistration = location.pathname === '/user-registration';
   const isOnboarding = location.pathname.startsWith('/onboarding');
-  const isKycFlow = location.pathname.startsWith('/kyc-flow');
-  const isKycDemo = location.pathname.startsWith('/kyc-demo');
-  const isA2APlayground = location.pathname.startsWith('/a2a-playground');
   const isInvestorGuide = location.pathname === '/investor-guide';
   const isHushhAI = location.pathname.startsWith('/hushh-ai');
   const isKai = location.pathname.startsWith('/kai');
@@ -110,9 +102,15 @@ const ContentWrapper = ({ children }: { children: ReactNode }) => {
   const isProfile = location.pathname === '/profile';
   const isHushhHackathon = location.pathname === '/hushh-hackathon';
   const isMetrics = location.pathname === '/metrics' || location.pathname === '/metric';
+  const isModernPublicPage =
+    location.pathname === '/contact' ||
+    location.pathname === '/Contact' ||
+    location.pathname === '/faq' ||
+    location.pathname === '/philosophy' ||
+    location.pathname === '/about/philosophy';
 
   return (
-    <div className={`${isHomePage || isAuthCallback || isUserRegistration || isOnboarding || isKycFlow || isKycDemo || isA2APlayground || isInvestorGuide || isHushhAI || isKai || isStudio || isHushhUserProfile || isSignNda || isDocumentViewer || isInvestorProfile || isPublicInvestorProfile || isDiscoverFundA || isCommunity || isDeleteAccount || isLogin || isSignup || isProfile || isHushhHackathon || isMetrics ? '' : 'mt-20'}`}>
+    <div className={`${isHomePage || isAuthCallback || isUserRegistration || isOnboarding || isInvestorGuide || isHushhAI || isKai || isStudio || isHushhUserProfile || isSignNda || isDocumentViewer || isInvestorProfile || isPublicInvestorProfile || isDiscoverFundA || isCommunity || isDeleteAccount || isLogin || isSignup || isProfile || isHushhHackathon || isMetrics || isModernPublicPage ? '' : 'mt-20'}`}>
       {children}
     </div>
   );
@@ -135,15 +133,18 @@ const useLayoutVisibility = () => {
   const isSignNda = location.pathname.startsWith('/sign-nda');
   const isDocumentViewer = location.pathname.startsWith('/document-viewer');
   const isHushhUserProfile = location.pathname.startsWith('/hushh-user-profile');
+  const isModernPublicPage =
+    location.pathname === '/contact' ||
+    location.pathname === '/Contact' ||
+    location.pathname === '/faq' ||
+    location.pathname === '/philosophy' ||
+    location.pathname === '/about/philosophy';
 
   // All pages using HushhTechHeader — hide old global Navbar/Footer
-  const isKycFlow = location.pathname.startsWith('/kyc-flow');
-  const isKycDemo = location.pathname.startsWith('/kyc-demo');
-  const isA2APlayground = location.pathname.startsWith('/a2a-playground');
   const isPublicInvestorProfile = location.pathname.startsWith('/investor/');
   const isHushhHackathon = location.pathname === '/hushh-hackathon';
   const isMetrics = location.pathname === '/metrics' || location.pathname === '/metric';
-  const hideOld = isHushhAI || isKai || isStudio || isHomePage || isOnboarding || isProfile || isFundA || isCommunity || isDeleteAccount || isLogin || isSignup || isSignNda || isDocumentViewer || isHushhUserProfile || isKycFlow || isKycDemo || isA2APlayground || isPublicInvestorProfile || isHushhHackathon || isMetrics;
+  const hideOld = isHushhAI || isKai || isStudio || isHomePage || isOnboarding || isProfile || isFundA || isCommunity || isDeleteAccount || isLogin || isSignup || isSignNda || isDocumentViewer || isHushhUserProfile || isModernPublicPage || isPublicInvestorProfile || isHushhHackathon || isMetrics;
   return {
     showNavbar: !hideOld,
     showFooter: !hideOld,
@@ -165,6 +166,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/about/leadership" element={<Leadership />} />
             <Route path="/about/philosophy" element={<Philosophy />} />
+            <Route path="/philosophy" element={<Philosophy />} />
             <Route path="/Login" element={<LoginPage />} />
             <Route path="/Contact" element={<Contact />} />
             <Route path="/contact" element={<Contact />} />
@@ -294,16 +296,9 @@ function App() {
             <Route path="/hushhid/:id" element={<PublicHushhProfilePage />} />
             <Route path="/hushhid-hero-demo" element={<HushhIDHeroDemo />} />
             {/* <Route path="/solutions" element={<SolutionsPage />} /> */}
-            <Route path='/kyc-verification' element={
-
-              <KYCVerificationPage />
-
-            } />
-            <Route path='/kyc-form' element={
-
-              <KYCFormPage />
-
-            } />
+            <Route path='/kyc' element={<Navigate to='/' replace />} />
+            <Route path='/kyc-verification' element={<Navigate to='/' replace />} />
+            <Route path='/kyc-form' element={<Navigate to='/' replace />} />
             <Route path='/discover-fund-a' element={
 
               <DiscoverFundA />
@@ -355,9 +350,9 @@ function App() {
                 <YourProfilePage />
               </AuthRequiredRoute>
             } />
-            <Route path='/kyc-demo' element={<KYCDemoPage />} />
-            <Route path='/kyc-flow' element={<KycFlowPage />} />
-            <Route path='/a2a-playground' element={<A2APlaygroundPage />} />
+            <Route path='/kyc-demo' element={<Navigate to='/' replace />} />
+            <Route path='/kyc-flow' element={<Navigate to='/' replace />} />
+            <Route path='/a2a-playground' element={<Navigate to='/' replace />} />
             <Route path='/receipt-generator' element={<ReceiptGeneratorPage />} />
             <Route path='/developer-docs' element={<DeveloperDocsPage />} />
             <Route path='/metrics' element={<MetricsPage />} />

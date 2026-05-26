@@ -146,10 +146,8 @@ export default function Navbar() {
 
   const primaryNavLinks = [
     { path: "/", label: t('nav.home') },
-    { path: "/about/leadership", label: t('nav.ourPhilosophy') },
     { path: "/discover-fund-a", label: t('nav.fundA') },
     { path: "/community", label: t('nav.community') },
-    { path: "/a2a-playground", label: t('nav.kycStudio') },
     { path: "/contact", label: t('nav.contact') },
     { path: "/faq", label: t('nav.faq') },
   ];
@@ -376,10 +374,8 @@ export default function Navbar() {
               <div className="bg-white rounded-[10px] overflow-hidden mb-5 shadow-sm">
                 {[
                   { path: "/", label: t('nav.home'), icon: "home", bg: "#007AFF" },
-                  { path: "/about/leadership", label: t('nav.ourPhilosophy'), icon: "menu_book", bg: "#34C759" },
                   { path: "/discover-fund-a", label: t('nav.fundA'), icon: "pie_chart", bg: "#5856D6" },
                   { path: "/community", label: t('nav.community'), icon: "groups", bg: "#FF9500" },
-                  { path: "/a2a-playground", label: t('nav.kycStudio'), icon: "verified_user", bg: "#FF2D55" },
                 ].map(({ path, label, icon, bg }, idx, arr) => (
                   <button
                     key={path}

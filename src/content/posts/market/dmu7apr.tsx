@@ -1,12 +1,12 @@
 import React from 'react';
-import { Box, Text, Heading, VStack, Divider, List, ListItem } from '@chakra-ui/react';
+import { Box, Text, Heading, VStack, Divider } from '@chakra-ui/react';
 import MarketUpdateGallery from '../../../components/MarketUpdateGallery';
 
 const Dmu7apr = () => {
   return (
     <Box color="black" borderRadius="md">
       <Heading as="h2" fontSize="2xl" mb={4} color="black">
-        🤫 Daily Market Update
+        🤫 Daily Market Snapshot - April 7, 2025
       </Heading>
       <Text mb={4}>Date: April 7, 2025</Text>
 

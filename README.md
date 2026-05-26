@@ -31,6 +31,17 @@ Repository URL: https://github.com/hushh-labs/hushh_Tech_website
 - deployments are gated by post-merge smoke and promoted by approved SHAs instead of raw branch pushes
 - fork PRs may need maintainer approval before untrusted code-executing workflows can run
 
+## Rustic Phase 2
+
+General open-source contributions are paused during Rustic Phase 2. The public community lane is focused on reproducible bug reports through GitHub Issues.
+
+- accepted and resolved bug reports can earn impact points
+- feature requests and unsolicited external PRs are out of scope
+- external bug-fix PRs are invite-only after a maintainer accepts the linked issue
+- security vulnerabilities must be reported privately through [SECURITY.md](SECURITY.md)
+
+See [Rustic Phase 2 Bug Impact Workflow](docs/reference/operations/rustic-phase-2-bug-impact.md).
+
 ## Maintainer PR triage
 
 Maintainers now have an explicit OSS contribution triage flow on top of agent review and CI:

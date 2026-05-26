@@ -1,12 +1,12 @@
 import React from 'react';
-import { Box, Text, Heading, VStack, Divider, List, ListItem } from '@chakra-ui/react';
+import { Box, Text, Heading, VStack, Divider } from '@chakra-ui/react';
 import MarketUpdateGallery from '../../../components/MarketUpdateGallery';
 
 const Dmu3apr = () => {
   return (
     <Box color="black" borderRadius="md">
       <Heading as="h2" fontSize="2xl" mb={4} color="black">
-        🤫 Aloha Alpha Fund — April 3, 2025 Performance Recap
+        🤫 Daily Market Snapshot - April 3, 2025
       </Heading>
 
       <Divider my={4} borderColor="black" />

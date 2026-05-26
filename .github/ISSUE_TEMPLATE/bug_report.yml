@@ -1,21 +1,70 @@
-name: Bug report
-description: Report a reproducible bug in the repo or deployed product.
+name: Rustic Phase 2 bug report
+description: Report a reproducible Phase 2 bug. Feature requests and public security reports are out of scope.
 title: "[bug] "
 labels:
   - bug
+  - phase2:needs-triage
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Phase 2 is focused on high-quality bug reports. Impact points are awarded only after a maintainer accepts the report and the bug is officially resolved.
+
+        Do not report security vulnerabilities here. Use the private security reporting path instead.
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight
+      options:
+        - label: I searched existing issues and did not find a duplicate.
+          required: true
+        - label: This is a bug, not a feature request or general contribution proposal.
+          required: true
+        - label: This is not a security vulnerability, secret leak, privacy issue, or exploit report.
+          required: true
+  - type: dropdown
+    id: product_area
+    attributes:
+      label: Affected area
+      description: Pick the closest product or repo surface.
+      options:
+        - Public website
+        - Routes or navigation
+        - API wrapper route
+        - Auth or session
+        - KYC or onboarding
+        - Mobile or responsive UI
+        - Accessibility
+        - Docs or content
+        - CI, build, or local setup
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: route
+    attributes:
+      label: Affected route, page, or command
+      description: Include the URL path, file path, command, or API route where the bug appears.
+      placeholder: "/login, /api/example, npm run build:web, src/pages/example.tsx"
+    validations:
+      required: true
   - type: textarea
     id: summary
     attributes:
       label: Summary
-      description: What is broken?
+      description: What is broken? Keep this concise and specific.
     validations:
       required: true
   - type: textarea
     id: steps
     attributes:
       label: Steps to reproduce
-      description: Include exact routes, commands, or API calls when possible.
+      description: Include exact routes, commands, account state, viewport size, or API calls when possible.
+      placeholder: |
+        1. Open ...
+        2. Click ...
+        3. Run ...
+        4. Observe ...
     validations:
       required: true
   - type: textarea
@@ -31,7 +80,23 @@ body:
     validations:
       required: true
   - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser/device/OS, viewport, Node/npm version, deployment URL, or local branch where relevant.
+      placeholder: "Chrome 125 on macOS, iPhone Safari, Node 20.19.0, production, local main..."
+    validations:
+      required: true
+  - type: textarea
     id: validation
     attributes:
-      label: Validation and logs
-      description: Paste relevant test output, screenshots, or logs. Do not paste secrets.
+      label: Evidence, screenshots, logs, or recordings
+      description: Paste relevant output, screenshots, recording links, or logs. Do not paste secrets, tokens, private user data, or exploit details.
+  - type: textarea
+    id: impact
+    attributes:
+      label: User impact
+      description: Who is affected, how often it happens, and why fixing it matters.
+      placeholder: "Blocks signup on mobile, breaks a public route, causes layout overflow, fails local build..."
+    validations:
+      required: true

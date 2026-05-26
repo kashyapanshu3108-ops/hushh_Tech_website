@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import emailjs from "@emailjs/browser";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
@@ -23,6 +22,7 @@ import {
   Link as ChakraLink,
 } from "@chakra-ui/react";
 import { MapPin, Phone, Clock, ArrowRight } from "lucide-react";
+import HushhTechHeader from "../components/hushh-tech-header/HushhTechHeader";
 
 /** Home-aligned serif for headings (Playfair). Body uses global Manrope from `index.css`. */
 const playfair = { fontFamily: "'Playfair Display', serif" };
@@ -70,8 +70,6 @@ const reasonOptions = [
   "Other"
 ];
 
-emailjs.init("_TMzDc8Bfy6riSfzq");
-
 export default function Contact() {
   const [num1, setNum1] = useState<number>(0);
   const [num2, setNum2] = useState<number>(0);
@@ -83,13 +81,13 @@ export default function Contact() {
     phone: '',
     reason: '',
     message: '',
-    captcha: ''
+    captcha: '',
+    website: '',
   });
 
   const [captchaError, setCaptchaError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-  const form = useRef<HTMLFormElement>(null);
 
   const generateRandomNumbers = () => {
     const randomNum1 = Math.floor(Math.random() * 100);
@@ -127,45 +125,57 @@ export default function Contact() {
 
     setCaptchaError("");
 
-    const serviceId = "service_tsuapx9";
-    const templateId = "template_50ujflf";
-    const userId = "DtG13YmoZDccI-GgA";
-
-    const templateParams = {
-      name: formData.name,
-      company: formData.company,
-      email: formData.email,
-      phone: formData.phone,
-      reason: formData.reason,
-      message: formData.message,
-    };
-
     setIsSubmitting(true);
     try {
-      const result = await emailjs.send(serviceId, templateId, templateParams, userId);
-      console.log("Email sent successfully:", result.text);
-      toast.success("Email sent successfully!");
-      navigate("/");
+      const response = await fetch("/api/contact-notification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          company: formData.company,
+          email: formData.email,
+          phone: formData.phone,
+          reason: formData.reason,
+          message: formData.message,
+          website: formData.website,
+          sourcePath: window.location.pathname,
+        }),
+      });
+
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        throw new Error(payload.error || "Failed to send message");
+      }
+
+      toast.success("Message sent successfully.");
+      setFormData({
+        name: '',
+        company: '',
+        email: '',
+        phone: '',
+        reason: '',
+        message: '',
+        captcha: '',
+        website: '',
+      });
+      generateRandomNumbers();
     } catch (error) {
-      const message =
-        error && typeof error === "object" && "text" in error
-          ? String((error as { text: string }).text)
-          : "Unknown error";
-      console.error("Failed to send email:", message);
-      toast.error("Failed to send email. Please try again later");
+      const message = error instanceof Error ? error.message : "Please try again later.";
+      console.error("Failed to send contact message:", message);
+      toast.error("Failed to send message. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <Box
-      as="main"
-      id="main-content"
-      bg={pageBg}
-      w="100%"
-      className="antialiased text-gray-900"
-    >
+    <Box bg={pageBg} minH="100vh" className="antialiased text-gray-900">
+      <HushhTechHeader />
+      <Box
+        as="main"
+        id="main-content"
+        w="100%"
+      >
       <Container maxW="7xl" py={{ base: 10, md: 14 }} px={{ base: 4, md: 6, lg: 8 }}>
         {/* Main Header */}
         <Box textAlign="center" mb={{ base: 8, md: 10 }}>
@@ -257,8 +267,17 @@ export default function Contact() {
               Send us a Message
             </Heading>
 
-            <form ref={form} onSubmit={handleSubmit} aria-busy={isSubmitting}>
+            <form onSubmit={handleSubmit} aria-busy={isSubmitting}>
               <VStack spacing={5} align="stretch">
+                <Input
+                  name="website"
+                  value={formData.website}
+                  onChange={handleChange}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  display="none"
+                />
                 <SimpleGrid
                   columns={{ base: 1, md: 2 }}
                   spacing={5}
@@ -574,6 +593,7 @@ export default function Contact() {
 
         <ToastContainer />
       </Container>
+      </Box>
     </Box>
   );
 }

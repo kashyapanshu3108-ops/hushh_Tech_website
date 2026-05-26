@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  issues: read
   pull-requests: read
   checks: read
 
@@ -171,6 +172,31 @@ jobs:
           if-no-files-found: error
           path: tmp/ci/pr-hygiene-report.json
 
+  phase2-pr-policy:
+    name: Phase 2 PR Policy
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Validate invite-only Phase 2 PR policy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/ci/check-phase2-pr-policy.mjs
+
+      - name: Upload Phase 2 PR policy report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase2-pr-policy-report
+          if-no-files-found: error
+          path: tmp/ci/phase2-pr-policy-report.json
+
   semantic-pr-guard:
     name: Semantic PR Guard
     if: github.event_name == 'pull_request'
@@ -283,6 +309,7 @@ jobs:
       - env-contract
       - reviewer-context
       - pr-hygiene
+      - phase2-pr-policy
       - web-validation
       - lint
       - security-audit
@@ -298,6 +325,7 @@ jobs:
             ["Env Contract Check"]="${{ needs.env-contract.result }}"
             ["Reviewer Context & Compliance"]="${{ needs.reviewer-context.result }}"
             ["PR Hygiene"]="${{ needs.pr-hygiene.result }}"
+            ["Phase 2 PR Policy"]="${{ needs.phase2-pr-policy.result }}"
             ["Web Validation"]="${{ needs.web-validation.result }}"
             ["Lint"]="${{ needs.lint.result }}"
             ["Security Audit"]="${{ needs.security-audit.result }}"
@@ -308,6 +336,9 @@ jobs:
             result="${REQUIRED_RESULTS[$job]}"
             echo "$job => $result"
             if [ "$job" = "PR Hygiene" ] && [ "$result" = "skipped" ]; then
+              continue
+            fi
+            if [ "$job" = "Phase 2 PR Policy" ] && [ "$result" = "skipped" ]; then
               continue
             fi
             if [ "$job" = "DCO" ] && [ "$result" = "skipped" ]; then

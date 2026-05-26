@@ -18,7 +18,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "build:assets": "node scripts/generate-sitemap.js && node scripts/generate-robots.js",
+    "build:community": "node scripts/community/generate-community-snapshot.mjs",
+    "build:assets": "npm run build:community && node scripts/generate-sitemap.js && node scripts/generate-robots.js",
+    "gcp:secrets:audit": "node scripts/gcp/audit-hushh-tech-secret-manager.mjs",
+    "gcp:secrets:migrate-uat": "node scripts/gcp/migrate-hushh-tech-uat-env-to-secrets.mjs",
     "build:web": "npm run build:assets && vite build",
     "build": "vitest run && npm run build:web",
     "preview": "vite preview",
@@ -34,7 +37,6 @@
     "@ant-design/icons": "^5.5.1",
     "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "2.10.3",
-    "@emailjs/browser": "^4.4.1",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@fontsource/dm-sans": "^5.2.8",
@@ -89,6 +91,7 @@
     "supabase": "^1.219.0",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^3.4.0",
+    "ws": "^8.20.1",
     "zustand": "^5.0.9"
   },
   "devDependencies": {

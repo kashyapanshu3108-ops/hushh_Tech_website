@@ -1,11 +1,12 @@
 /**
- * Client service to call the Supabase Edge Function for investor profile generation
+ * Client service to call the same-origin Cloud Run API for investor profile generation.
  */
 
 import { InvestorProfileInput, DerivedContext, InvestorProfile } from "../../types/investorProfile";
 import { enrichContext, enrichWithPlaidData } from "./enrichContext";
 import resources from "../../resources/resources";
 import { getAuthenticatedSession } from "../../auth/session";
+import { getSafeInvestorProfileErrorMessage } from "./errorMessages";
 
 export interface GenerateProfileResponse {
   success: boolean;
@@ -14,7 +15,7 @@ export interface GenerateProfileResponse {
 }
 
 /**
- * Calls the Supabase Edge Function to generate investor profile using OpenAI GPT-4o
+ * Calls the GCP Cloud Run API to generate an investor profile with server-side Gemini.
  */
 export async function generateInvestorProfile(
   input: InvestorProfileInput
@@ -41,14 +42,9 @@ export async function generateInvestorProfile(
       context.financial_context = plaidData;
     }
 
-    // 3. Determine Edge Function URL (always use production for now)
+    // 3. Call the same-origin GCP API route. The browser never receives the AI key.
     const supabaseUrl = (import.meta as any).env.VITE_SUPABASE_URL;
-    
-    // Force production Edge Function (local Supabase not running)
-    const edgeFunctionUrl = `${supabaseUrl}/functions/v1/generate-investor-profile`;
-
-    // 4. Call the Supabase Edge Function
-    const response = await fetch(edgeFunctionUrl, {
+    const response = await fetch("/api/generate-investor-profile", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -63,12 +59,15 @@ export async function generateInvestorProfile(
     const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      const errorMessage = data.error || `Edge function failed with status ${response.status}`;
+      const errorMessage = getSafeInvestorProfileErrorMessage(
+        data.error || `Investor profile service failed with status ${response.status}`,
+        response.status
+      );
       throw new Error(errorMessage);
     }
 
     if (!data.success || !data.profile) {
-      throw new Error('Invalid response from Edge Function');
+      throw new Error('Invalid response from investor profile service');
     }
 
     // 5. Fire NWS score email notification (non-blocking) if Plaid data was used
@@ -118,7 +117,7 @@ export async function generateInvestorProfile(
     return {
       success: false,
       profile: {} as InvestorProfile,
-      error: error instanceof Error ? error.message : 'Unknown error occurred',
+      error: getSafeInvestorProfileErrorMessage(error),
     };
   }
 }

@@ -1,6 +1,5 @@
 {
   "nav": {
-    "ourPhilosophy": "Notre Philosophie",
     "fundA": "Fonds A",
     "community": "Communauté",
     "faq": "FAQ",
@@ -12,7 +11,6 @@
     "logout": "Déconnexion",
     "viewProfile": "Voir le Profil",
     "home": "Accueil",
-    "kycStudio": "KYC Studio Alpha",
     "deleteAccount": "Supprimer le Compte"
   },
   "deleteAccount": {
